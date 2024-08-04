@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 06:43:53 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/02 16:52:16 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/08/04 00:15:56 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ t_redir	*handle_redir_type(t_shell *sh)
 	else if (strncmp(redir_type, "<", redir_type_len) == 0)
 		red = fill_redir("<", 0, sh);
 	else if (strncmp(redir_type, ">>", redir_type_len) == 0)
-		red = fill_redir("<", 2, sh);
+		red = fill_redir(">>", 2, sh);
+	else if (strncmp(redir_type, "<<", redir_type_len) == 0)
+		red = fill_redir("<<", 3, sh);
 	return (red);
 }
 

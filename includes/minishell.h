@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 05:59:56 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/03 06:02:36 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/08/04 05:32:42 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <errno.h>
 # include <limits.h>
 # include <linux/limits.h>
+# include <signal.h>
 
 # define SKIP_SPACES 1
 # define JUMP_TOKEN 2
@@ -38,13 +39,13 @@
 # define ANSI_COLOR_RESET   "\x1b[0m"
 
 /* file descriptors */
-# define STDIN 0
-# define STDOUT 1
-# define STDERR 2
+# define STDIN	0
+# define STDOUT	1
+# define STDERR	2
 
 /* return values */
-# define ERROR 1
-# define SUCCESS 0
+# define ERROR	1
+# define SUCCESS	0
 
 # define _EMPTY	0
 # define _PIPE	1
@@ -64,8 +65,8 @@
 # define IS_DIRECTORY 126
 # define UNKNOWN_COMMAND 127
 
-typedef struct s_token	t_token;
 
+typedef struct s_token	t_token;
 typedef struct s_cmd	t_cmd;
 typedef struct s_exec	t_exec;
 typedef struct s_pipe	t_pipe;
@@ -96,6 +97,7 @@ struct	s_exec
 struct	s_pipe
 {
 	int		type;
+	int		fd[2];
 	t_cmd	*left;
 	t_cmd	*right;
 };
@@ -293,5 +295,11 @@ void	reset_fd(t_shell *shell);
 
 /* STRING UTILS */
 int		ft_splitt(char ***strs, char *s, char c);
+
+/* MANAGE_SIGNALS */
+
+void	signal_handler(int signal);
+void	main_signal_handler(int signal);
+
 
 #endif

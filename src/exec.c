@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 21:58:30 by eescalei          #+#    #+#             */
-/*   Updated: 2024/08/02 19:04:18 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/08/04 01:19:05 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ char * get_cmds(char **path, char *cmd)
 	i = 0;
 	cmd_path = NULL;
 	sub_path = NULL;
-	printf("%s\n", path[1]);
+	//printf("%s\n", path[1]);
 	while (path[i] != NULL)
 	{
-		printf("%s\n", cmd);
+		//printf("%s\n", cmd);
 		sub_path = ft_strjoin(path[i], "/");
 		cmd_path = ft_strjoin(sub_path, cmd);
 		if(access(cmd_path, X_OK) == 0)

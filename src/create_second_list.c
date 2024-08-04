@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 04:46:05 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/02 16:50:56 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/08/04 00:20:43 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,10 @@ void	refine_token_list(t_shell *sh)
 			handle_token(sh, ">");
 		else if (sh->token_list->head->type == HEREDOC)
 			handle_token(sh, "<<");
+		else if (sh->token_list->head->type == _APPEND)
+			handle_token(sh, ">>");
 		if (!sh->token_list->head)
 			break ;
+		printf("ssss\n");
 	}
 }

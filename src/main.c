@@ -6,11 +6,14 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 17:08:42 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/03 01:29:13 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/08/04 06:18:10 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int g_status_exit_val;
+
 //#include "../includes/env.h"
 
 //#define BLUE 			\033 [0;34m
@@ -24,7 +27,7 @@ static void	get_prompt(t_shell *shell)
 	dir = getcwd(dir, 100);
 	shell->prompt = ft_strjoin(dir, "$ ");
 	shell->cmd_line = readline(shell->prompt);
-	if (shell->cmd_line)
+	if (shell->cmd_line && shell->cmd_line[0] != 0)
 		add_history(shell->cmd_line);
 	free(dir);
 }
@@ -67,7 +70,7 @@ void get_path_env(t_shell *shell, char **envp)
 	{	
 		if(ft_strncmp(envp[i], "PATH=", 4) == 0)
 		{// check strcmp
-			printf("%s\n", envp[i]);
+			//printf("%s\n", envp[i]);
 			ft_splitt(&(shell->path), envp[i] + 5, ':');
 			break ;
 		}
@@ -101,28 +104,61 @@ void  init_shell(t_shell *shell, char **ev)
 	shell->out = dup(STDOUT);
 	reset_fd(shell);
 	shell->ret = 0;
+	
 	shell->no_exec = 0;
+}
+
+
+extern int g_status_exit_val;
+
+void main_signal_handler(int signal)
+{
+	if (signal == SIGINT)
+	{
+		g_status_exit_val  = SIGINT;
+		rl_replace_line("", 1);
+		write(1,"\n",1);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+}
+
+
+void signal_handler(int signal)
+{
+	if (signal == SIGINT)
+	{
+		g_status_exit_val  = SIGINT;
+		rl_replace_line("", 1);
+		write(1,"\n",1);
+		rl_on_new_line();
+		rl_redisplay();
+	}
 }
 
 int main(int ac,char **av ,char **ev)
 {
 	t_shell shell;
+	struct sigaction sa;
 
+	ft_memset(&sa, 0, sizeof(sa));
+	sa.sa_handler = signal_handler;
 	(void)av;
 	(void)ac;
 	shell.stop_iteration = false;
 	while (shell.stop_iteration == false)
 	{
+		sigaction(SIGINT, &sa, NULL);
 		init_shell(&shell, ev);
 		get_prompt(&shell);
-		if (ft_memcmp(shell.cmd_line, "exit\0", 5) == 0)
-		{
-			delete_all(&shell);
-			return (0);
-		}
+		//if (ft_memcmp(shell.cmd_line, "exit\0", 5) == 0)
+		//{
+		//	delete_all(&shell);
+		//	return (0);
+		//}
 		if (shell.cmd_line[0] != '\0')
 			analise_terminal_input(&shell, shell.cmd_line);
-		//execute_line(&shell);
+		execute_line(&shell);
 		delete_all(&shell);
 	}
 	return 0;

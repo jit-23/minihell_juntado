@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 23:00:04 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/02 16:33:17 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/08/04 00:25:24 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 /* put all the fill_list functions on a file named "fill_list_utils.c" */
 /*								|
-								V 											*/
+								V 										*/
 
 void	organize_reddir_type(t_shell *sh, char *token, t_placing placing)
 {
 	if (!ft_strncmp(token, ">>", ft_strlen(">>")))
-		add_to_list(sh->token_list, token, DREDIREC, placing);
+		add_to_list(sh->token_list, token, _APPEND, placing);
 	else if (!ft_strncmp(token, "<<", ft_strlen("<<")))
 		add_to_list(sh->token_list, token, HEREDOC, placing);
 	else if (!ft_strncmp(token, "<", ft_strlen("<")))

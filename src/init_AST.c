@@ -2,12 +2,11 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   init_AST.c                                         :+:      :+:    :+:   */
-/*                  x                                  +:+ +:+        
-	+:+     */
+/*                                                    +:+ +:+         +:+     */
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/04 00:47:31 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/06/26 15:20:15 by fde-jesu         ###   ########.fr       */
+/*   Created: 2024/08/04 00:11:53 by fde-jesu          #+#    #+#             */
+/*   Updated: 2024/08/04 00:15:02 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +38,7 @@ t_cmd	*parse_redir(t_cmd *branch_root, t_shell *sh)
 	t_redir	*tmp2;
 
 	ret = (t_redir *)branch_root;
-	while (peek_token(sh->rl->head, 3, ">", ">>", "<"))
+	while (peek_token(sh->rl->head, 4, ">", "<<", ">>", "<"))
 	{
 		tmp = handle_redir_type(sh);
 		if (ret->type == _EXEC)

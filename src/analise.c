@@ -12,7 +12,7 @@
 
 #include "../includes/minishell.h"
 
-/* void	print_tree(t_cmd *root)
+void	print_tree(t_cmd *root)
 {
 	static int	j;
 	int			i;
@@ -23,11 +23,12 @@
 	i = -1;
 	if (root == NULL)
 		return ;
+	printf("type of root - %d\n", root->type);
 	if (root->type == _EXEC)
 	{
 		ex = (t_exec *)root;
 		while (ex->args[++i])		
-			printf("%d - args - %s\n", j, ex->args[i]);
+			printf("%d - args - %s\n", j, ex->args[i]);	
 		j++;
 		printf("\n");
 	}
@@ -45,7 +46,7 @@
 		print_tree((t_cmd *)pp->left);
 		print_tree((t_cmd *)pp->right);
 	}
-} */
+}
 
 void	parse_tokens(t_shell *shell, char *cmdl)
 {
@@ -73,6 +74,7 @@ void	analise_terminal_input(t_shell *shell, char *cmdline)
 	}
 	head = shell->rl->official_head;
 	init_ast(shell);
+	print_tree(shell->root);
 	return ;
 }
 
