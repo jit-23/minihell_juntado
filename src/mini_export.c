@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_export.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 02:26:23 by eescalei          #+#    #+#             */
-/*   Updated: 2024/08/03 01:23:20 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/07/31 21:42:37 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ int	is_in_env(t_env *ev, const char *arg)
 	}
 	return (SUCCESS);
 }
-
 int	mini_export(char **args, t_env *ev, t_env *hiden) // ^ problemas com estrutura ^
 {
 	int	new_ev;

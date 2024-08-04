@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 05:59:56 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/04 05:32:42 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/08/04 06:57:35 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,29 +156,30 @@ typedef struct s_lexer
 
 typedef struct s_shell
 {
-	char	*cmd_line;
-	char	*prompt;
-	char	**env;
-	char	**paths;
+	char *cmd_line;
+	char *prompt;
+	char **env;
+	char **paths;
 	char	**path;
-	t_lexer	*token_list;
-	t_lexer	*rl;
-	t_env	*ev;
-	t_cmd	*root;
+	t_lexer *token_list;
+	t_lexer *rl;
+	t_env *ev;
+	t_cmd *root;
 	int		in;
 	int		out;
 	int		fdin;
 	int		fdout;
-	int		pipin;	
-	int		pipout;	
-	int		prev_pipe;
+	t_pipe	*current_pipe;	
+	t_pipe	*prev_pipe;
+	int		last_status;
 	int		pid;
 	int		charge;	// need innitialization
 	int		parent;	// need innitialization
 	int		last;	// need innitialization
 	int		ret;	// need innitialization
 	int		no_exec;
-	bool	stop_iteration;
+
+	bool stop_iteration;
 }t_shell;
 
 /* MAIN. */
@@ -197,6 +198,10 @@ void	handle_token(t_shell *sh, char *token);
 void	add_to_refined_list(t_lexer *token_refined, char *word,
 			t_type type);
 void	analise_cmdl(t_shell *shell, t_placing place, int i, char *cmdl);
+
+/* PIPE UTILS */
+void	set_pipe_fds(t_shell *shell, t_cmd *cmd);
+
 
 /* DESTROY_UTILS_ALL.C */
 void	delete_env_lst(t_env *head, int size);
@@ -279,9 +284,6 @@ t_env	*new_env_node(char *env);
 		// prev e definido na funcao na qual este e chamada
 char	*get_name(char *env_var);
 char	*get_env_value(char *env_var);
-
-/* PIPE UTILS */
-void	set_pipe_fds(t_shell *shell, t_pipe *pip1, t_pipe *pip2, int side);
 
 /* EXECUTE */
 void	execute_line(t_shell *shell);
