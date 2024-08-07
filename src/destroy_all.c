@@ -6,14 +6,14 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 17:07:57 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/02 16:51:11 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/08/07 17:42:58 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /* clear linked list for the env vars. */
 #include "../includes/minishell.h"
 
-void	delete_all(t_shell *shell)
+void		delete_all(t_shell *shell)
 {
 	if (shell->cmd_line)
 		free(shell->cmd_line);
@@ -34,7 +34,7 @@ void	delete_all(t_shell *shell)
 	if (shell->ev)
 		delete_env_lst(shell->ev, lst_size_env(shell->ev));
 }
-
+/* clean_for_next_loop = obsuleta  */
 void	clean_for_next_loop(t_shell *sh)
 {
 	if (sh->cmd_line)

@@ -7,10 +7,10 @@ RED:=\033[0;31m
 BLUE=\033[0;34m
 default_colour=\033[0m
 
-
 SRC_FILES:=  main.c \
 					analise.c \
 					check_syntax.c\
+					signals.c\
 					create_first_list_utils_1.c\
 					create_first_list_utils_2.c\
 					create_first_list.c\

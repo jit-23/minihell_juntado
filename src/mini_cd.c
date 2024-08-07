@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_cd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:56:34 by eescalei          #+#    #+#             */
-/*   Updated: 2024/07/31 21:42:00 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/08/07 16:24:27 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	print_error(char **args)
 		ft_putstr_fd(": ", 1);
 	}
 	ft_putstr_fd(args[1], 1);
-}	
+}
 
 int	update_old_pwd(char **env)
 {

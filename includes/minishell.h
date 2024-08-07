@@ -6,12 +6,14 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 05:59:56 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/04 06:57:35 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/08/07 19:50:07 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+extern int g_status_exit_val;
 
 # include <readline/history.h>
 # include <readline/readline.h>
@@ -301,7 +303,7 @@ int		ft_splitt(char ***strs, char *s, char c);
 /* MANAGE_SIGNALS */
 
 void	signal_handler(int signal);
-void	main_signal_handler(int signal);
+void	handle_signal(void);
 
 
 #endif

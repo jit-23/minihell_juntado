@@ -6,13 +6,14 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 17:08:42 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/04 06:18:10 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/08/07 19:49:33 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 int g_status_exit_val;
+
 
 //#include "../includes/env.h"
 
@@ -109,55 +110,86 @@ void  init_shell(t_shell *shell, char **ev)
 }
 
 
-extern int g_status_exit_val;
 
-void main_signal_handler(int signal)
+/* static void	mini_exit_nando(int mode, t_shell *shell, t_exec *exec)
 {
-	if (signal == SIGINT)
-	{
-		g_status_exit_val  = SIGINT;
-		rl_replace_line("", 1);
-		write(1,"\n",1);
-		rl_on_new_line();
-		rl_redisplay();
-	}
+	if (ft_memcmp(exec->args[0], "exit\0", 5) == 1)
+		return ;
+	delete_all(shell);
+	if (mode == 1) // exit builtin
+		exit(EXIT_SUCCESS);
+	else if (mode == 0) // outro exit, assim o valor da ultima acao fica ai
+		exit(g_status_exit_val);
+}
+ */
+
+static void update_signal()
+{
+	struct sigaction pa;
+
+	ft_memset(&pa, 0, sizeof(pa));
+	pa.sa_handler = SIG_IGN;
+	sigaction(SIGINT, &pa, NULL);
 }
 
-
-void signal_handler(int signal)
+static void wait_child(int wstatus, t_shell  *shell)
 {
-	if (signal == SIGINT)
+	if (WIFSIGNALED(wstatus))
 	{
-		g_status_exit_val  = SIGINT;
-		rl_replace_line("", 1);
-		write(1,"\n",1);
-		rl_on_new_line();
-		rl_redisplay();
+		if (WCOREDUMP(wstatus))
+		{
+			write(1,"Quit (core dumped)\n",19);
+			// shell->exitcode = 131/
+		}
+		else if (WTERMSIG(wstatus) == SIGINT)
+		{
+			write(1,"\n",1);
+			// shell->exitcode = 130/
+		}
 	}
+			// shell->exitcode = 131/
+	//else
+		// shell->exitcode = wstatus /256
+}
+
+static void handle_execution(t_shell *sh)	
+{
+	int pid;
+	int wstatus;
+	
+	wstatus = 0;
+	pid = fork();
+	if (pid == 0)
+	{
+		if (sh->root)
+			execute_line(sh);
+		exit(errno);	
+	}
+	update_signal();
+	waitpid(pid, &wstatus, 0);
+	wait_child(wstatus, sh);
 }
 
 int main(int ac,char **av ,char **ev)
 {
 	t_shell shell;
-	struct sigaction sa;
-
-	ft_memset(&sa, 0, sizeof(sa));
-	sa.sa_handler = signal_handler;
+	
 	(void)av;
 	(void)ac;
 	shell.stop_iteration = false;
 	while (shell.stop_iteration == false)
 	{
-		sigaction(SIGINT, &sa, NULL);
 		init_shell(&shell, ev);
+		handle_signal();
 		get_prompt(&shell);
-		//if (ft_memcmp(shell.cmd_line, "exit\0", 5) == 0)
-		//{
-		//	delete_all(&shell);
-		//	return (0);
-		//}
-		if (shell.cmd_line[0] != '\0')
+		if (shell.cmd_line)
 			analise_terminal_input(&shell, shell.cmd_line);
+		else
+		{
+			delete_all(&shell);
+			ft_putstr_fd(1, "exit\n");
+			exit (0);
+		}
 		execute_line(&shell);
 		delete_all(&shell);
 	}

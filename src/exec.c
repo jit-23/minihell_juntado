@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 21:58:30 by eescalei          #+#    #+#             */
-/*   Updated: 2024/08/04 05:34:54 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/08/04 07:25:11 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,10 @@ void execute_cmd(t_shell *shell, t_exec *cmd)
 	{
 		set_pipe_fds(shell,(t_cmd *)cmd);
 		printf("cmd ready to execute\n\n");
+		//handle_child_signal(); // adicionado por ___________NANDO________________
 		execve(exec_path, cmd->args, shell->env); // set $? to exit code
-	}	
+	}
+	
 	waitpid(shell->pid, &shell->last_status, 0); // wait in func where execute
 	printf("cmd executed\n\n");	
 	// //check if args is null terminated

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_pwd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 14:43:08 by eescalei          #+#    #+#             */
-/*   Updated: 2024/07/31 21:42:41 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/08/07 01:58:30 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 int mini_pwd(void)
 {
 	char *cwd[PATH_MAX];
-
 	if (getcwd(cwd, PATH_MAX))
 	{
 		write(1, cwd, ft_strlen(cwd));
