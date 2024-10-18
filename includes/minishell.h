@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 05:59:56 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/07 19:50:07 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/10/10 19:15:30 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,10 @@ typedef struct s_token
 	t_token		*prev;
 }t_token;
 
+typedef struct s_heredoc
+{
+	int temp_file;	
+}t_heredoc;
 typedef struct s_lexer
 {
 	t_token	*head;
@@ -181,7 +185,18 @@ typedef struct s_shell
 	int		ret;	// need innitialization
 	int		no_exec;
 
+	int heredoc_flag;
+
+	int heredoc_tmp_file;
+
 	bool stop_iteration;
+
+	/* variavies do nando para a parte da execucao */
+	//char **
+
+	/* variavies do nando para a parte da execucao */
+
+
 }t_shell;
 
 /* MAIN. */
@@ -267,7 +282,7 @@ t_redir	*get_last_redir(t_cmd *sub_root);
 t_redir	*handle_redir_type(t_shell *sh);
 t_redir	*fill_redir(char *s, int mode, t_shell *sh);
 int		peek_future_tokens_type(t_token *head, t_type type);
-t_cmd	*pipe_parse(t_shell *sh, t_cmd *left);
+t_cmd	*pipe_parse(t_shell *sh/* , t_cmd *left */);
 t_cmd	*exec_parse(t_shell *sh, t_exec *exec_struct);
 t_pipe	*init_pipe(void);
 t_exec	*init_exec(void);
@@ -304,6 +319,14 @@ int		ft_splitt(char ***strs, char *s, char c);
 
 void	signal_handler(int signal);
 void	handle_signal(void);
+void handle_execution(t_shell *sh);
+void wait_child(int wstatus, t_shell  *shell);
+void update_signal();
 
+/* EXECUTION.C */
+
+void runcmd(t_shell *sh, t_cmd *root);
+void runpipe(t_shell *sh,t_pipe *root);
+void _handle_execution(t_shell *sh);
 
 #endif

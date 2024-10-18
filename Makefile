@@ -31,7 +31,8 @@ SRC_FILES:=  main.c \
 					exec.c\
 					tree_encrementation.c\
 					pipe_utils.c \
-					ft_split.c
+					ft_split.c\
+#					execution.c\
 				
 			#		mini_cd.c\
 			#		mini_echo.c\
@@ -44,7 +45,7 @@ SRC_FILES:=  main.c \
 #					init_tree.c\
 					tree_validation.c\
 
-MAKE:= make -C
+MAKE:= make -j  -C
 LIBFT_DIR:= includes/libft
 LIBFT:= includes/libft/libft.a
 
@@ -60,7 +61,7 @@ all: ${NAME}
 
 ${COMP_LIB}:
 		echo "${RED}DONE${default_colour}"
-		${MAKE} ${LIBFT_DIR}
+#		${MAKE} ${LIBFT_DIR}
 
 $(OBJ_PATH)%.o : $(SRC_PATH)%.c
 		${COMP_LIB}

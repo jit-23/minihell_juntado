@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 16:22:12 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/02 16:30:38 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/10/02 16:24:01 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,20 @@
 int	get_space(char *cmdl, int i, t_shell *sh, t_placing placing)
 {
 	char	*space;
+	int j;
 
+	j = 0;
 	space = ft_strdup(" ");
+	while(cmdl[j] == 32 || cmdl[j] == '\t')
+		j++;
+	if (sh->heredoc_flag == 1 && (sh->token_list->head->type == HEREDOC || sh->token_list->head->type == WORD
+		|| sh->token_list->head->type == ENV))
+		{
+			printf("ENTREIIII\n");
+			printf("type - %d\n", sh->token_list->head->type/* cmdl[i] */);
+		}
+	else
+		sh->heredoc_flag = 0;
 	add_to_list(sh->token_list, space, SPACE_BAR, placing);
 	return (1);
 }

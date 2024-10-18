@@ -6,13 +6,13 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 17:08:42 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/07 19:49:33 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/10/07 20:07:45 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int g_status_exit_val;
+//int g_status_exit_val;
 
 
 //#include "../includes/env.h"
@@ -106,68 +106,9 @@ void  init_shell(t_shell *shell, char **ev)
 	reset_fd(shell);
 	shell->ret = 0;
 	
+	shell->heredoc_tmp_file = 65;
+	shell->heredoc_flag = 0;
 	shell->no_exec = 0;
-}
-
-
-
-/* static void	mini_exit_nando(int mode, t_shell *shell, t_exec *exec)
-{
-	if (ft_memcmp(exec->args[0], "exit\0", 5) == 1)
-		return ;
-	delete_all(shell);
-	if (mode == 1) // exit builtin
-		exit(EXIT_SUCCESS);
-	else if (mode == 0) // outro exit, assim o valor da ultima acao fica ai
-		exit(g_status_exit_val);
-}
- */
-
-static void update_signal()
-{
-	struct sigaction pa;
-
-	ft_memset(&pa, 0, sizeof(pa));
-	pa.sa_handler = SIG_IGN;
-	sigaction(SIGINT, &pa, NULL);
-}
-
-static void wait_child(int wstatus, t_shell  *shell)
-{
-	if (WIFSIGNALED(wstatus))
-	{
-		if (WCOREDUMP(wstatus))
-		{
-			write(1,"Quit (core dumped)\n",19);
-			// shell->exitcode = 131/
-		}
-		else if (WTERMSIG(wstatus) == SIGINT)
-		{
-			write(1,"\n",1);
-			// shell->exitcode = 130/
-		}
-	}
-			// shell->exitcode = 131/
-	//else
-		// shell->exitcode = wstatus /256
-}
-
-static void handle_execution(t_shell *sh)	
-{
-	int pid;
-	int wstatus;
-	
-	wstatus = 0;
-	pid = fork();
-	if (pid == 0)
-	{
-		if (sh->root)
-			execute_line(sh);
-		exit(errno);	
-	}
-	update_signal();
-	waitpid(pid, &wstatus, 0);
-	wait_child(wstatus, sh);
 }
 
 int main(int ac,char **av ,char **ev)
@@ -190,7 +131,8 @@ int main(int ac,char **av ,char **ev)
 			ft_putstr_fd(1, "exit\n");
 			exit (0);
 		}
-		execute_line(&shell);
+		//_handle_execution(&shell);
+		//handle_execution(&shell);
 		delete_all(&shell);
 	}
 	return 0;

@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 16:22:12 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/02 16:31:58 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/10/02 16:32:38 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,18 @@ int	get_word(char *cmdl, int i, t_shell *sh, t_placing placing)
 
 	count = 0;
 	j = -1;
-	count = count_word_size(cmdl, i, count, placing);
+	if (sh->heredoc_flag == 0)
+		count = count_word_size(cmdl, i, count, placing);
+	else
+	{
+		count++;
+		count = count_word_size(cmdl, i + 1, count, placing);
+	}
 	token = ft_calloc(count, sizeof(char) * (count + 1));
 	while (++j < count)
+	{
 		token[j] = cmdl[i + j];
+	}
 	token[j] = '\0';
 	add_to_list(sh->token_list, token, WORD, placing);
 	return (count);
@@ -73,6 +81,9 @@ int	get_pipe(t_shell *sh, t_placing placing)
 	pipe_var = (char *)s_malloc(sizeof(sizeof(char) * 2));
 	pipe_var[1] = '\0';
 	pipe_var[0] = '|';
+/* 	if (sh->heredoc_flag == 1 && (sh->token_list->head->type == WORD
+		|| sh->token_list->head->type == ENV)) */
+		sh->heredoc_flag = 0;
 	add_to_list(sh->token_list, pipe_var, PIPE, placing);
 	return (1);
 }

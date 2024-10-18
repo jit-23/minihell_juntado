@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 23:00:04 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/04 00:25:24 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/08/27 03:50:12 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,18 @@
 /*								|
 								V 										*/
 
+
+/* faz um print na funcao organize env, e verifica ate onde(na direcao contraria) e que o valor nao muda, e onde deveria mudar(verifica no segundo analise, refine) */
 void	organize_reddir_type(t_shell *sh, char *token, t_placing placing)
 {
 	if (!ft_strncmp(token, ">>", ft_strlen(">>")))
 		add_to_list(sh->token_list, token, _APPEND, placing);
 	else if (!ft_strncmp(token, "<<", ft_strlen("<<")))
+	{
+		sh->heredoc_flag = 1;
+		printf("\t\t\theredoc_flag post analise cmdl - %d\n", sh->heredoc_flag);
 		add_to_list(sh->token_list, token, HEREDOC, placing);
+	}
 	else if (!ft_strncmp(token, "<", ft_strlen("<")))
 		add_to_list(sh->token_list, token, REDIR_IN, placing);
 	else if (!ft_strncmp(token, ">", ft_strlen(">")))

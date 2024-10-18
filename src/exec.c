@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 21:58:30 by eescalei          #+#    #+#             */
-/*   Updated: 2024/08/04 07:25:11 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/10/03 11:14:43 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void execute_line(t_shell *shell)
 	while(shell->root != NULL)
 	{
 		cmd = next_run(shell);
-		printf("\nnext run: %s\n type: %i\n", ((t_exec *)cmd)->args[0], cmd->type);
+		//printf("\nnext run: %s\n type: %i\n", ((t_exec *)cmd)->args[0], cmd->type);
 		//finish  values setup
 		open_pipes(shell);
 	//	manage_pipes PS: do it in chld process
