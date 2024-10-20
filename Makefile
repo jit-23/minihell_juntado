@@ -28,19 +28,19 @@ SRC_FILES:=  main.c \
 					search_through_tokens.c\
 					token_utils.c\
 					fd_utils.c\
-					exec.c\
 					tree_encrementation.c\
-					pipe_utils.c \
+					execution.c\
 					ft_split.c\
-#					execution.c\
-				
-			#		mini_cd.c\
-			#		mini_echo.c\
-			#		mini_env.c\
-			#		mini_exit.c\
-			#		mini_export.c\
-			#		mini_pwd.c\
-			#		mini_unset.c\
+#					exec.c\
+#					pipe_utils.c \
+	
+#		mini_cd.c\
+#		mini_echo.c\
+#		mini_env.c\
+#		mini_exit.c\
+#		mini_export.c\
+#		mini_pwd.c\
+#		mini_unset.c\
 					string_funcs.c
 #					init_tree.c\
 					tree_validation.c\

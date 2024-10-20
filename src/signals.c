@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 19:02:49 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/09/23 18:35:54 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/10/20 16:57:27 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void wait_child(int wstatus, t_shell  *shell)
 		// shell->exitcode = wstatus /256
 }
 
-void handle_execution(t_shell *sh)	
+/* void handle_execution(t_shell *sh)	
 {
 	int pid;
 	int wstatus;
@@ -88,3 +88,4 @@ void handle_execution(t_shell *sh)
 	wait_child(wstatus, sh);
 }
 
+ */

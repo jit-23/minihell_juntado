@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 17:08:42 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/10/07 20:07:45 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/10/19 05:18:20 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ static void	print_env(t_env *e, char **ev)
 	i = 0;
 	while (e)
 	{
-		printf(ANSI_COLOR_RED "%s\n", e->env_name);
-		printf(ANSI_COLOR_RESET "%s\n", ev[i]);
+		printf(RED "%s\n", e->env_name);
+		printf(CSET "%s\n", ev[i]);
 		e = e->next;
 		i++;
 	}
@@ -54,8 +54,8 @@ static void	print_vals(t_env *e, char **ev)
 	i = 0;
 	while (e)
 	{
-		printf(ANSI_COLOR_RED ".%s.\n", e->env_value);
-		printf(ANSI_COLOR_RESET "%s\n", ev[i]);
+		printf(RED ".%s.\n", e->env_value);
+		printf(CSET "%s\n", ev[i]);
 		e = e->next;
 		i++;
 	}
@@ -131,7 +131,8 @@ int main(int ac,char **av ,char **ev)
 			ft_putstr_fd(1, "exit\n");
 			exit (0);
 		}
-		//_handle_execution(&shell);
+		
+		_handle_execution(&shell);
 		//handle_execution(&shell);
 		delete_all(&shell);
 	}

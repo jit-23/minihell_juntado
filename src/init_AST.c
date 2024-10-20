@@ -6,30 +6,11 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 00:11:53 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/10/19 00:41:23 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/10/19 01:04:44 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-/* t_cmd	*pipe_parse(t_shell *sh, t_cmd *right)
-{
-	t_pipe	*pipe_struct;
-                              
-	pipe_struct = init_pipe();
-	//pipe_struct->left = left;
-	pipe_struct->right = right;
-	sh->root = (t_cmd *)pipe_struct;
-	if (sh->rl->head->next)
-		sh->rl->head = sh->rl->head->next;
-	if (peek_future_tokens_type(sh->rl->head, PIPE))
-	{                            
-		pipe_struct->right = exec_parse(sh, init_exec());
-		pipe_parse(sh, (t_cmd *)sh->root);
-	}                              
-	else if (peek_future_tokens_type(sh->rl->head, WORD))
-		pipe_struct->right = exec_parse(sh, init_exec());
-	return ((t_cmd *)pipe_struct);
-} */
 
 static t_pipe *last_pipe(t_pipe *root)
 {
@@ -66,93 +47,6 @@ static int one_pipe_token(t_token *head, t_type type)
 		return (1);
 	return (0);
 }
-
-// t_cmd *pipe_parse(t_shell *sh)
-// {
-// 	t_pipe *pp = init_pipe();
-// 	t_pipe *lp;
-
-// 	lp = NULL;
-// 	printf("\t\t\t\t\tsh->rl->head - .%s.\n", sh->rl->head->token);
-// 	if (sh->rl->head && sh->rl->head->type == PIPE)
-// 		sh->rl->head = sh->rl->head->next;
-// 	printf("\t\t\t\t\t(post)sh->rl->head - .%s.\n", sh->rl->head->next->token);
-// 	if (sh->root->type == _EXEC)
-// 	{
-// 		//printf("1\n");
-// 		pp->left = sh->root;
-// 		sh->root = (t_cmd *)pp;
-// 		printf("token in the first iteration: %s\n", sh->rl->head->token);
-// 		if (peek_future_tokens_type(sh->rl->head, PIPE))
-// 		{
-// 			pipe_parse(sh);
-// 		}
-// 		else
-// 			pp->right = exec_parse(sh, init_exec());
-// 	}
-// 	else if (sh->root->type == _PIPE)
-// 	{
-// 		lp = last_pipe((t_pipe *)sh->root);
-// 		if (one_pipe_token(sh->rl->head, PIPE))
-// 		{
-// 			free(pp);
-// 			lp->right = exec_parse(sh, init_exec());
-// 			return (NULL);
-// 		}
-// 		/* aqui decido o que fazer, (analiso se est e o ultimo pipe) se 
-// 		houver mais continua, caso contrario luda de forma simples */
-// 		lp->right = (t_cmd *)pp;
-// 		pp->left = exec_parse(sh, init_exec());
-// 		if (peek_future_tokens_type(sh->rl->head, PIPE))
-// 		{
-// 			pipe_parse(sh);
-// 		}
-// 		else
-// 		{
-// 			pp->right = (t_cmd *)exec_parse(sh, init_exec());  //pk e que este pp nao functiona? nao existe>?
-// 		}
-// 	}
-// 	return ((t_cmd *)pp);
-// }
-
-/*
-
-t_cmd	*pipe_parse(t_shell *sh, t_cmd *left)
-{
-	t_pipe	*pipe_struct;
-
-	pipe_struct = init_pipe();
-	pipe_struct->left = left;
-	sh->root = (t_cmd *)pipe_struct;
-	if (sh->refined_list->head->next)
-		sh->refined_list->head = sh->refined_list->head->next;
-	if (peek_future_tokens_type(sh->refined_list->head, PIPE))
-	{
-		pipe_struct->right = exec_parse(sh, init_exec());
-		pipe_parse(sh, (t_cmd *)sh->root);
-	}
-	else if (peek_future_tokens_type(sh->refined_list->head, WORD))
-		pipe_struct->right = exec_parse(sh, init_exec());
-	return ((t_cmd *)pipe_struct);
-}  */
-
-// t_cmd	*pipe_parse(t_shell *sh/* , t_cmd *left */)
-// {
-// 	t_pipe	*lp; // last_pipe;
-// 	t_pipe	*pipe_struct;
-
-// 	pipe_struct = init_pipe();
-// 	if (sh->rl->head->next)
-// 		sh->rl->head = sh->rl->head->next;
-// 	if (peek_future_tokens_type(sh->rl->head, PIPE))
-// 	{
-// 		lp = last_pipe((t_pipe *)sh->root);
-// 		lp->right = pipe_struct;
-// 		pipe_struct->left = exec_parse(sh, init_exec());
-// 		pipe_parse(sh);
-// 	}
-// 	return ((t_cmd *)pipe_struct);
-// }
 
 t_cmd	*parse_redir(t_cmd *branch_root, t_shell *sh)
 {
@@ -238,6 +132,7 @@ static int get_tkn(int i, t_exec *exec ,char *token, t_shell *sh)
 		exec->args[i] = get_right_path(token, sh);
 		printf("exec->args[%d] - %s\n", i, exec->args[i]);
 	}
+	sh->rl->head = sh->rl->head->next;
 	return (1);
 }
 
@@ -259,12 +154,7 @@ t_cmd	*exec_parse(t_shell *sh, t_exec *exec_struct)
 			break ;
 		if (sh->rl->head && sh->rl->head->type == WORD
 			|| sh->rl->head->type == ENV)
-		{
-			//exec_struct->args[i] = get_tkn(i, sh->rl->head->token, sh);
-			//i += get_tkn(i,exec_struct , sh->rl->head->token, sh);
-			exec_struct->args[i++] = ft_strdup(sh->rl->head->token);
-			sh->rl->head = sh->rl->head->next;
-		}
+			i += get_tkn(i,exec_struct , sh->rl->head->token, sh);
 		else
 			sh->rl->head = sh->rl->head->next;
 	}

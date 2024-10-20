@@ -76,41 +76,9 @@ void	analise_terminal_input(t_shell *shell, char *cmdline)
 		return ;
 	}
 	head = shell->rl->official_head;
-	//while (head)
-	//{
-	//	printf("===================\n");
-	//	printf("address = .%p.\n", head);
-	//	printf("token   = .%s.\n", head->token);
-	//	printf("Placing = .%u.\n", head->placing);
-	//	printf("Type    = .%d.\n", head->type);
-	////	printf("hrdcF   = .%d.\n", );
-	//	head = head->next;
-	//} 
 	init_ast(shell);
 	printf("\n\n\n\n\n");
 	//print_tree(shell->root);
-
-	//	t_redir *w;
-	//	w = (t_redir *)shell->root;
-	
-	//t_pipe *pp;
-	//t_pipe *pp2;
-	//t_exec *ex;
-//
-	//pp = (t_pipe *)shell->root;
-	//pp2 = (t_pipe *)pp->right;
-	//ex = (t_exec *)pp->left;
-	//if (ex)
-	//	printf("exist\n");
-	//printf("first cmd = %s\n", ex->args[0]);
-	//if (pp2)
-	//	printf("pp2 exist\n");
-	//ex = (t_exec *)pp2->left;
-	//printf("second cmd = %s\n", ex->args[0]);
-	//ex = (t_exec *)pp2->right;
-	//printf("third cmd = %s\n", ex->args[0]);
-
-	print_tree(shell->root);
 	return ;
 }
 
