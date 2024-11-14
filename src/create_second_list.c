@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 04:46:05 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/31 19:03:34 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/13 14:49:57 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,40 +15,34 @@
 void	handle_token(t_shell *sh, char *token)
 {
 	char	*to_send;
-
 	to_send = ft_strdup(token);
-	if (/* ft_strncmp(token, " ", 1) == 0 */ sh->token_list->head->type != HEREDOC)
-	{
-		//printf("ft_strncmp(token, " ", 2) = %d\n", ft_strncmp(token, " ", 2));
-		//printf("sh->heredoc_flag = %d\n", sh->heredoc_flag);
-		//printf("post_heredoc_flag - %d\n", sh->heredoc_flag);
-	}
-	//else if (sh->token_list->head->type == SPACE_BAR)
-	//{
-	//	sh->heredoc_flag = 0;
-	//}
-	add_to_refined_list(sh->rl, to_send, sh->token_list->head->type);
+	add_to_refined_list(sh->rl, to_send, sh->token_list->head->type, sh->token_list->head->placing);
 	sh->token_list->head = sh->token_list->head->next;
 }
 
-void	add_to_refined_list(t_lexer *token_refined, char *word, t_type type)
+void	add_to_refined_list(t_lexer *token_refined, char *word, t_type type, t_placing placing)
 {
 	t_token	*head;
 	t_token	*prev;
 	t_token	*last;
+	char *s;
 
+	s = strdup(word);
 	if (!token_refined->head)
 	{
-		token_refined->head = new_node(word, type, 0);
+		token_refined->head = new_node(s, type, 0);
 		token_refined->head->prev = NULL;
+		token_refined->head->placing = placing;
 		token_refined->official_head = token_refined->head;
+		free(word);
 		return ;
 	}
 	last = ft_lstlast(token_refined->head);
-	last->next = new_node(word, type, 0);
+	last->next = new_node(s, type, 0);
 	prev = last;
 	last = last->next;
 	last->prev = prev;
+	free(word);
 }
 
 void	handle_word_token(t_shell *sh)
@@ -74,10 +68,52 @@ void	handle_word_token(t_shell *sh)
 		}
 		sh->token_list->head = sh->token_list->head->next;
 	}
-	add_to_refined_list(sh->rl, w, og->type);
+	add_to_refined_list(sh->rl, w, og->type, og->placing);
 }
 
 void	refine_token_list(t_shell *sh)
+{
+	while (sh->token_list->head)
+	{
+		if (sh->token_list->head->type == WORD)
+			handle_word_token(sh);
+		else if (sh->token_list->head->type == SPACE_BAR)
+			handle_token(sh, " ");
+		else if (sh->token_list->head->type == ENV)
+			handle_word_token(sh);
+		else if (sh->token_list->head->type == S_QUOTE
+			|| sh->token_list->head->type == D_QUOTE)
+			sh->token_list->head = sh->token_list->head->next;
+		else if (sh->token_list->head->type == PIPE)
+			handle_token(sh, "|");
+		else if (sh->token_list->head->type == REDIR_IN)
+			handle_token(sh, "<");
+		else if (sh->token_list->head->type == REDIR_OUT)
+		{
+		//	printf("?????????????????????\n");
+			handle_token(sh, ">");
+		}
+		else if (sh->token_list->head->type == HEREDOC)
+			handle_token(sh, "<<");
+		else if (sh->token_list->head->type == _APPEND)
+			handle_token(sh, ">>");
+		else if (sh->token_list->head->type == EQUAL)
+			handle_token(sh, "=");
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* void	refine_token_list(t_shell *sh)
 {
 	while (sh->token_list->head)
 	{
@@ -103,4 +139,17 @@ void	refine_token_list(t_shell *sh)
 		if (!sh->token_list->head)
 			break ;
 	}
-}
+} */
+
+
+
+/* //if (.ft_strncmp(token, " ", 1) == 0  .sh->token_list->head->type != HEREDOC)
+	//{
+		//printf("ft_strncmp(token, " ", 2) = %d\n", ft_strncmp(token, " ", 2));
+		//printf("sh->heredoc_flag = %d\n", sh->heredoc_flag);
+		//printf("post_heredoc_flag - %d\n", sh->heredoc_flag);
+//	}
+	//else if (sh->token_list->head->type == SPACE_BAR)
+	//{
+	//	sh->heredoc_flag = 0;
+	//} */

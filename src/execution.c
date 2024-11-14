@@ -7,6 +7,10 @@ char *allocate_static_block(char *block);
 char *create_path_copy();
 void print(char *s);
 
+void	set_signals(void);
+void	sigint_handler(int signo);
+
+
 void print(char *a)
 {
 	for (int i = 0; a[i]; i++)
@@ -14,6 +18,26 @@ void print(char *a)
 	/*estou a meter 2 no write pk e o fd
 	para erro, como so estou a mexer com o output, o erro fd
 	esta intacto, dps tenho que lidar com ele tmb  */	
+}
+
+
+
+void	set_signals()
+{
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGTSTP, SIG_IGN);
+}
+void	sigint_handler(int signo)
+{
+	if (signo == SIGINT)
+	{
+		//g_signo = 130;
+		write(2, "\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+	}
 }
 
 
@@ -25,17 +49,14 @@ void run_cmd(t_shell *sh, t_exec *ex);
 void run_tree(t_shell *sh, t_cmd *root);
 
 /*  */
+int	lstsize(t_env *lst);
+/*  */
 
 void run_left_branch(t_shell *sh, t_pipe *branch ,int pipe[2])
 {
 	dup2(pipe[1], 1);
 	close(pipe[0]);
 	close(pipe[1]);
-	t_exec *a;
-	a = (t_exec *)branch->left;
-	print("\t\t");
-	print(a->args[0]);
-	print("\n");
 	run_tree(sh, (t_cmd *)branch->left);
 }
 
@@ -47,10 +68,17 @@ void run_right_branch(t_shell *sh, t_pipe *branch ,int pipe[2])
 	run_tree(sh, (t_cmd *)branch->right);
 }
 
+void get_exit_code(int status, t_shell *sh)
+{
+	if(WIFEXITED(status) != 0)
+		sh->exitcode = WEXITSTATUS(status);
+	//delete_all(sh);
+}
+
 void run_pipe(t_shell *sh, t_pipe *pp)
 {
 	int fd[2];
-	//int status;
+	int status;
 	pid_t left;
 	pid_t right;
 
@@ -63,41 +91,162 @@ void run_pipe(t_shell *sh, t_pipe *pp)
 		run_right_branch(sh, (t_pipe *)pp, fd);
 	close(fd[0]);
 	close(fd[1]);
-	waitpid(-1,0,0);
-	waitpid(-1,0,0);
+	waitpid(left, &status, 0);
+	waitpid(right, &status, 0);
+	get_exit_code(status, sh);
+	exit(1);
+}
+
+static void	sigint_child_handler(int signo)
+{
+	if (signo == SIGINT)
+	{
+		write(2, "_", 1);
+		write(2, "\n", 1);
+		rl_replace_line("", 0);
+		rl_redisplay();
+		exit(1);
+	}
+	else if (signo == SIGQUIT)
+	{
+		write(2, "Quit (core dumped)\n", 19);
+		exit(1);
+	}
+}
+
+static void	set_child_signals(void)
+{
+	signal(SIGINT, sigint_child_handler);
+	signal(SIGQUIT, sigint_child_handler);
 }
 
 void run_cmd(t_shell *sh, t_exec *ex)
 {
-	if (execve(ex->args[0], ex->args, sh->env) == -1)
-		perror("LOLOOOOLLOOL\n");
+	pid_t pid1;
+	int status;
+
+	if (ex->args[0] == NULL)
+		return ;
+	if (is_builtin(ex->args[0]))
+	{
+		execute_builtin(ex, ex->args[0], sh);
+		return ;
+	}
+	pid1 = fork();
+	if (pid1 == 0)
+	{
+		
+		if (execve(ex->args[0], ex->args, sh->env) == -1)
+		{
+			ft_putstr_fd(2, ex->args[0]);
+			ft_putstr_fd(2, ": command not found\n");
+			delete_all(sh);
+			exit(127);
+		}
+	}
+	else
+	{
+		waitpid(pid1, &status, 0);
+		if (WIFEXITED(status))
+			sh->exitcode = WEXITSTATUS(status);
+
+	}
+}
+
+int get_file(t_shell *sh, t_redir *redir)
+{
+	int fd;
 	
+	if (redir->mode == 0) // < redirection of input
+	{
+		fd = open(redir->file, O_RDONLY, 0664);
+		if (fd < 0)
+			ft_putstr_fd(2, "bash: FILE: Permission denied");
+		dup2(fd, STDIN_FILENO);
+		return (fd);
+	}
+	else if (redir->mode == 1) //> redirection of output 
+	{
+		//close(STDOUT_FILENO);
+		fd = open(redir->file, O_CREAT | O_WRONLY | O_TRUNC, 0664);
+		if (fd < 0)
+			ft_putstr_fd(2, "bash: FILE: Permission denied"); // troca isto
+		dup2(fd, STDOUT_FILENO);
+		//printf("\t\t\t2\n");
+		return (fd);
+	}
+	else  if (redir->mode == 2) // >>
+	{
+		printf("redir->file - %s\n", redir->file);
+		fd = open(redir->file,  O_CREAT | O_APPEND | O_WRONLY, 0664);
+		if (fd < 0)
+			ft_putstr_fd(2, "bash: FILE: Permission denied");
+		dup2(fd, STDOUT_FILENO);
+		return (fd);
+	}
+	else if (redir->mode == 3) // <<
+	{
+		fd = open(redir->file, O_RDWR, 0664);
+		if (fd < 0)
+			ft_putstr_fd(2, "bash: FILE: Permission denied");
+		dup2(fd, STDIN_FILENO);
+		return (fd);
+	}
+	return (-42);
+}
+
+void run_redir(t_shell *sh, t_redir *redir)
+{
+	int file;
+	t_exec *e;
+
+	e = NULL;
+	file = get_file(sh, redir);
+	if (file < 0)
+		perror("redir error\n");
+	if (redir->cmd)
+	{
+		e = (t_exec *)redir->cmd;
+		if (!e->args[0])
+			run_tree(sh, NULL);
+		run_tree(sh, (t_cmd *)redir->cmd);
+	}
 }
 
 void run_tree(t_shell *sh, t_cmd *root)
 {
-	static int a;
-
-	a++;
-	printf("iteracao\n");
+	int	pid;
 	if (!root)
 		return ;
-	if (a == 10)
-		exit(1);
 	if (root->type == _EXEC)
 		run_cmd(sh, (t_exec *)root);
 	else if (root->type == _REDIR)
-		run_cmd(sh, (t_exec *)root);
+		run_redir(sh, (t_redir *)root);
 	else if (root->type == _PIPE)
 	{
-	/* 	t_pipe *d;
-		t_exec *e;
-
-		d = (t_pipe *)root;
-		e = (t_exec *)d->left;
-		ft_putendl_fd( e->args[0],2); */
-		run_pipe(sh, (t_pipe*)root);
+		pid = fork();
+		if (pid == 0)
+			run_pipe(sh, (t_pipe*)root);
+		else
+			waitpid(-1, NULL, 0);
 	}
+}
+
+int	lstsize(t_env *lst)
+{
+	t_env	*temp;
+	int		count;
+
+	count = 0;
+	temp = lst;
+	if (!lst)
+		return (0);
+	while (temp != NULL)
+	{
+		temp = temp->next;
+		count++;
+	}
+	return (count);
 }
 
 void _handle_execution(t_shell *sh)	
@@ -106,14 +255,24 @@ void _handle_execution(t_shell *sh)
 	int wstatus;
 	
 	wstatus = 0;
-	pid = fork();
+	/* pid = fork();
+
 	if (pid == 0)
 	{
 		if (sh->root)
 			run_tree(sh, sh->root);
+		delete_all(sh);	
 		exit(errno);
-	}
-	update_signal();
-	waitpid(pid, &wstatus, 0);
-	wait_child(wstatus, sh);
+		exit(1);
+	} */
+	if (sh->root)
+		run_tree(sh, sh->root);
+
+	//update_signal();
+	//waitpid(pid, &wstatus, 0);
+	//wait_child(wstatus, sh);
+	//printf("here?");
+	delete_hiden_files(sh);
+	return ;
+//	printf("size of ll - %d\n", lstsize(sh->ev));
 }

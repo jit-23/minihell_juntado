@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 06:13:01 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/02 16:33:46 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/10 02:48:53 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,12 @@ static void	delete_exec(t_exec *ex)
 {
 	int	i;
 
-	i = -1;
-	while (ex->args[++i])
-		free(ex->args[i]);
+	i = 1;
+	if (ex->first_cmd == 1 || is_builtin(ex->args[0]) || is_possible_path(ex->args[0])) // esta limpeza e para quando alocamos para uma string de path absoluto
+		free(ex->args[0]);
+	while(ex->args[i])
+		free(ex->args[i++]);
+	ft_memset((void *)ex->args, 0, sizeof(ex->args));
 	free(ex);
 }
 
@@ -29,6 +32,8 @@ static void	delete_pipe(t_pipe *pp)
 
 static void	delete_redir(t_redir *redir)
 {
+	if (redir->mode == 3)
+		free(redir->file);
 	free(redir);
 }
 

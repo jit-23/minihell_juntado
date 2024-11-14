@@ -1,5 +1,5 @@
 NAME:= minishell
-CFLAGS:= #-Wall -Werror -Wextra
+CFLAGS:= -g #-Wall -Werror -Wextra
 
 HEADER = includes/minishell.h
 GREEN:= \033[0;32m
@@ -30,7 +30,7 @@ SRC_FILES:=  main.c \
 					fd_utils.c\
 					tree_encrementation.c\
 					execution.c\
-					ft_split.c\
+					is_builtin.c\
 #					exec.c\
 #					pipe_utils.c \
 	

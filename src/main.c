@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 17:08:42 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/10/19 05:18:20 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/13 16:28:05 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,29 +65,21 @@ void get_path_env(t_shell *shell, char **envp)
 {
 	int	i;
 
-	i = 0;
-	// printf("%s", envp[i]);
-	while(envp[i] != NULL)
+	i = -1;
+	shell->path = NULL;
+	while(envp[++i] != NULL)
 	{	
 		if(ft_strncmp(envp[i], "PATH=", 4) == 0)
-		{// check strcmp
-			//printf("%s\n", envp[i]);
-			ft_splitt(&(shell->path), envp[i] + 5, ':');
+		{
+			shell->path = ft_split(&envp[i][5], ':');
 			break ;
 		}
-		i++;
-	}
-	// printf("%s", shell->path[0]);
-	if(shell->path == NULL)
-	{
-		printf("erro path");// print_error(pipex, "Error getting path\n");
-		return;
 	}
 }
 
 void  init_shell(t_shell *shell, char **ev)
 {
-	shell->env = ev;			//need innitialization
+	shell->env = ev;
 	shell->root = NULL;
 	get_path_env(shell, ev);
 	shell->prompt = NULL;
@@ -100,41 +92,55 @@ void  init_shell(t_shell *shell, char **ev)
 	shell->token_list->official_head = NULL;
 	shell->rl->head = NULL;
 	shell->rl->official_head = NULL;
-	shell->ev = expand_env(shell, ev);
 	shell->in = dup(STDIN);
 	shell->out = dup(STDOUT);
 	reset_fd(shell);
 	shell->ret = 0;
+	//shell->exitcode = 0;
 	
 	shell->heredoc_tmp_file = 65;
 	shell->heredoc_flag = 0;
 	shell->no_exec = 0;
 }
 
+void	delete_path(char **path, int i)
+{
+	while(path[i])
+		free(path[i++]);
+	free(path);
+}
+
 int main(int ac,char **av ,char **ev)
 {
 	t_shell shell;
 	
-	(void)av;
-	(void)ac;
-	shell.stop_iteration = false;
-	while (shell.stop_iteration == false)
+	if (ac != 1)
+		return (ft_putstr_fd(2, "invalid number of arguments:"),1);
+	shell.ev = expand_env(&shell, ev);	
+	shell.exitcode = 0;
+	while (/* shell.stop_iteration == false */ 1)
 	{
 		init_shell(&shell, ev);
 		handle_signal();
 		get_prompt(&shell);
 		if (shell.cmd_line)
+		{
 			analise_terminal_input(&shell, shell.cmd_line);
+			_handle_execution(&shell);
+			delete_all(&shell);
+		}
 		else
 		{
 			delete_all(&shell);
+			if (shell.ev)
+				delete_env_lst(shell.ev, lst_size_env(shell.ev));
+			if (shell.path)
+				delete_path(shell.path, 0);
 			ft_putstr_fd(1, "exit\n");
 			exit (0);
 		}
-		
-		_handle_execution(&shell);
-		//handle_execution(&shell);
-		delete_all(&shell);
 	}
+		if (shell.ev)
+			delete_env_lst(shell.ev, lst_size_env(shell.ev));
 	return 0;
 }

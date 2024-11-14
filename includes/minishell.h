@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 05:59:56 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/10/10 19:15:30 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/13 18:36:38 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,14 @@ extern int g_status_exit_val;
 
 # define SKIP_SPACES 1
 # define JUMP_TOKEN 2
-# define ANSI_COLOR_RED     "\x1b[31m"
+
+# define RED     "\x1b[31m"
 # define ANSI_COLOR_GREEN   "\x1b[32m"
 # define ANSI_COLOR_YELLOW  "\x1b[33m"
 # define ANSI_COLOR_BLUE    "\x1b[34m"
 # define ANSI_COLOR_MAGENTA "\x1b[35m"
 # define ANSI_COLOR_CYAN    "\x1b[36m"
-# define ANSI_COLOR_RESET   "\x1b[0m"
+# define CSET  				"\x1b[0m"
 
 /* file descriptors */
 # define STDIN	0
@@ -94,6 +95,7 @@ struct	s_exec
 {
 	int		type;
 	char	*args[200];
+	int first_cmd;
 };
 
 struct	s_pipe
@@ -136,6 +138,7 @@ typedef enum e_type
 	SCAPE = '\\',
 	ENV = '$',
 	PIPE = '|',
+	EQUAL = '=',
 }t_type;
 
 typedef struct s_token
@@ -185,6 +188,7 @@ typedef struct s_shell
 	int		ret;	// need innitialization
 	int		no_exec;
 
+	int		exitcode;
 	int heredoc_flag;
 
 	int heredoc_tmp_file;
@@ -208,12 +212,12 @@ void	analise_terminal_input(t_shell *shell, char *cmdline);
 void	parse_tokens(t_shell *shell, char *cmdl);
 void	print_tree(t_cmd *root);
 void	delete_tree(t_cmd *root);
-int		get_new_line(t_shell *sh, t_placing place);
+int		get_equal(t_shell *sh, t_placing place);
 void	refine_token_list(t_shell *sh);
 void	handle_word_token(t_shell *sh);
 void	handle_token(t_shell *sh, char *token);
 void	add_to_refined_list(t_lexer *token_refined, char *word,
-			t_type type);
+			t_type type, t_placing placing);
 void	analise_cmdl(t_shell *shell, t_placing place, int i, char *cmdl);
 
 /* PIPE UTILS */
@@ -286,8 +290,16 @@ t_cmd	*pipe_parse(t_shell *sh/* , t_cmd *left */);
 t_cmd	*exec_parse(t_shell *sh, t_exec *exec_struct);
 t_pipe	*init_pipe(void);
 t_exec	*init_exec(void);
+void delete_all_paths(char **path, int i);
+
+int is_possible_path(char *token);
+
+
 int		peek_token(t_token *checker, int var_nbr, ...);
+/* int	peek_token(t_token *checker, char *pipe); */
+
 t_redir	*init_redir(void);
+
 // t_redir *check_redir(t_shell *sh,  t_token *node);
 t_cmd	*parse_redir(t_cmd *branch_root, t_shell *sh);
 
@@ -328,5 +340,17 @@ void update_signal();
 void runcmd(t_shell *sh, t_cmd *root);
 void runpipe(t_shell *sh,t_pipe *root);
 void _handle_execution(t_shell *sh);
+
+
+/*  */
+void delete_hiden_files(t_shell *sh);
+
+/* is_builtin.c */
+void ft_pwd(t_shell *sh);
+int is_builtin(char *cmd);
+void execute_builtin(t_exec *ex, char *cmd,t_shell *sh);
+
+
+
 
 #endif

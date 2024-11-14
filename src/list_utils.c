@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 22:18:06 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/07/30 08:06:55 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/10/24 16:22:36 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ t_token	*new_node(char *token, t_type type, t_placing placing)
 		// prev e definido na funcao na qual este e chamada
 {
 	t_token	*new_node;
-
+	//char *token2;
+	//token2 = strdup(token);
 	new_node = (t_token *)malloc(sizeof(t_token));
 	new_node->token = token;
 	new_node->type = type;

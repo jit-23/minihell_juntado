@@ -23,7 +23,6 @@ void	print_tree(t_cmd *root)
 	i = -1;
 	if (root == NULL)
 		return ;
-	//printf("type of root - %d\n", root->type);
 	if (root->type == _EXEC)
 	{
 		ex = (t_exec *)root;
@@ -55,8 +54,6 @@ void	parse_tokens(t_shell *shell, char *cmdl)
 	place = DEFAULT;
 	shell->heredoc_flag = 0;
 	analise_cmdl(shell, place, 0, shell->cmd_line);
-	//printf("OUT OF ANALISE\n");
-	//sleep(1);
 	refine_token_list(shell);
 }
 
@@ -65,8 +62,8 @@ void	analise_terminal_input(t_shell *shell, char *cmdline)
 	t_placing	place;
 	t_token		*head;
 
-	shell->cmd_line = ft_strtrim(shell->cmd_line, " \t");
-	if (!cmdline)
+	shell->cmd_line = ft_strtrim(shell->cmd_line, " ");
+	if (cmdline[0] == '\0')
 		return ;
 	place = DEFAULT;
 	parse_tokens(shell, cmdline);
@@ -75,19 +72,28 @@ void	analise_terminal_input(t_shell *shell, char *cmdline)
 		printf("syntax error\n");
 		return ;
 	}
-	head = shell->rl->official_head;
 	init_ast(shell);
-	printf("\n\n\n\n\n");
+	/* head = shell->token_list->official_head;
+	printf("+++++++++++=\n");
+	while (head)
+	{
+		printf("token   .%s.\n", head->token);
+		printf("placing .%d.\n", head->placing);
+		printf("type    .%d.\n", head->type);
+		printf("..........\n");
+		head = head->next;
+	} */
+
 	//print_tree(shell->root);
 	return ;
 }
 
-int	get_new_line(t_shell *sh, t_placing place)
+int	get_equal(t_shell *sh, t_placing place)
 {
-	char	*newl;
+	char	*equal;
 
-	newl = ft_strdup("\n");
-	add_to_list(sh->token_list, newl, NEW_LINE, place);
+	equal = ft_strdup("=");
+	add_to_list(sh->token_list, equal, EQUAL, place);
 	return (1);
 }
 

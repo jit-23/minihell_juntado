@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 07:30:46 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/07/30 08:05:46 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/13 14:48:40 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	is_space(int c)
 int	special_char(char c)
 {
 	if (c == '>' || c == '<' || c == '\n' || c == '\'' || c == '\"'
-		|| c == '$' || c == '|')
+		|| c == '$' || c == '|' || c == '=')
 		return (1);
 	return (0);
 }
@@ -39,8 +39,10 @@ int	count_word_size(char *cmdl, int i, int count, t_placing placing)
 	}
 	else if (placing == IN_DQ)
 	{
+		printf("initial - %c\n", cmdl[i]);
 		while (cmdl[i] && cmdl[i] != '\"')
 		{
+			printf("cmdl[%d] = .%c.\n", i, cmdl[i]);
 			count++;
 			i++;
 		}

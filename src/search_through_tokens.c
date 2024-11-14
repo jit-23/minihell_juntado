@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 16:11:41 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/10/15 08:56:11 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/13 15:23:19 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,25 +29,24 @@ t_token	*jump_token(t_token *token, int action)
 	return (token);
 }
 
-int	peek_token(t_token *checker, int var_nbr, ...)
+int	peek_token(t_token *checker,int var_nbr, ...)
 {
 	va_list	ptr;
 	int		flag;
 	int		i;
 	char	*token;
 
-	i = 0;
+	i = -1;
 	flag = 1;
 	if (!checker)
 		return (0);
 	token = checker->token;
 	va_start(ptr, var_nbr);
-	while (i < var_nbr)
+	while (++i < var_nbr)
 	{
 		flag = ft_strncmp(token, va_arg(ptr, char *), ft_strlen(token));
-		if (flag == 0)
+		if (flag == 0  && (checker->placing == DEFAULT))
 			return (1);
-		i++;
 	}
 	va_end(ptr);
 	return (0);
