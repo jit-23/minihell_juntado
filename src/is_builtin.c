@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 23:39:38 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/22 04:07:52 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/23 19:44:37 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,21 +107,17 @@ static int all_true(t_env *ev)
 	return 0;
 } 
 
-void display_exported_envs(t_shell *sh)
+/* void display_exported_envs(t_shell *sh)
 {
 	t_env *ptr;
 
 	int sz;
 	int i;
 
-//	printf("q\n");
 	i = 0;
 	sz = ft_listsize(sh->ev);
-	//printf("q\n");
-	
 	ptr = sh->ev;
-	//printf("sz - %d\n", sz);
-	while(/* i < sz */all_true(sh->ev))
+	while(all_true(sh->ev))
 	{
 		
 		ptr = alpha_order(sh);
@@ -138,7 +134,55 @@ void display_exported_envs(t_shell *sh)
 	//sh->ev = ptr;
 	delete_all(sh);
 	
+} */
+
+
+static void display_sorted_exported_envs(t_shell *sh)
+{
+	static int  index = 0;
+	t_env *a = sh->ev;
+	t_env *b = sh->ev->next;
+	t_env *ptr;
+	printf("flag1\n");
+	while (a)
+	{
+		b = sh->ev;
+		while(b)
+		{
+			if (strncmp(a->env_name, b->env_name, ft_strlen(a->env_name)) > 0)
+			{
+				if (a->displayed == 0)
+					ptr = a;
+			}
+			b = b->next;
+		}
+		a = a->next;
+	}
+	ptr->displayed = 1;
+	ptr->index = index++;	
 }
+
+static void organized_export(t_shell *sh)
+{
+	int s;
+
+	display_sorted_exported_envs(sh);
+	s = ft_listsize(sh->ev);
+	int i = -1;
+	t_env *a = sh->ev;
+	int flag = 1;
+	while(++i < s)
+	{
+		a = sh->ev;
+		if (a->index != flag)
+		{
+			while(a->index != flag)
+				a=a->next;
+		}
+		printf(".%s.\n", a->env_name);
+	}
+}
+
 
 static void insert_var(t_shell *sh, char *a, char *c)
 {
@@ -181,12 +225,14 @@ static void manage_var(t_shell *sh, t_exec *exec)
 	insert_var(sh, exec->args[1], exec->args[3]);
 }
 
+
+
 void ft_export(t_shell *sh, t_exec *ex)
 {
 	if (!ex->args[1]) // export sozinho.
 	{
 		printf("0\n");	
-		display_exported_envs(sh);
+		organized_export(sh);
 	}
 	else if (ex->args[1])
 	{

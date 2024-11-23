@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 00:11:53 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/13 15:22:40 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/23 19:34:55 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,12 +112,12 @@ t_cmd	*exec_parse(t_shell *sh, t_exec *exec_struct)
 	return ((t_cmd *)branch_root);
 }
 
-static void *a(t_shell *sh, t_cmd * idk)
+static void *a(t_shell *sh, t_cmd *idk)
 {
 	t_exec *exec;
 
 	exec = NULL;
-	if (idk->type = 2)
+	if (idk->type == 2)
 		exec = (t_exec *)idk;
 	if (!exec->args[0])
 		return (NULL);
