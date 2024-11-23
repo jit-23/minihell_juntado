@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 17:08:42 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/13 16:28:05 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/14 17:28:58 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void get_path_env(t_shell *shell, char **envp)
 	i = -1;
 	shell->path = NULL;
 	while(envp[++i] != NULL)
-	{	
+	{
 		if(ft_strncmp(envp[i], "PATH=", 4) == 0)
 		{
 			shell->path = ft_split(&envp[i][5], ':');
@@ -96,8 +96,6 @@ void  init_shell(t_shell *shell, char **ev)
 	shell->out = dup(STDOUT);
 	reset_fd(shell);
 	shell->ret = 0;
-	//shell->exitcode = 0;
-	
 	shell->heredoc_tmp_file = 65;
 	shell->heredoc_flag = 0;
 	shell->no_exec = 0;
@@ -116,9 +114,9 @@ int main(int ac,char **av ,char **ev)
 	
 	if (ac != 1)
 		return (ft_putstr_fd(2, "invalid number of arguments:"),1);
-	shell.ev = expand_env(&shell, ev);	
 	shell.exitcode = 0;
-	while (/* shell.stop_iteration == false */ 1)
+	shell.ev = expand_env(&shell, ev);	
+	while (1)
 	{
 		init_shell(&shell, ev);
 		handle_signal();
@@ -131,16 +129,17 @@ int main(int ac,char **av ,char **ev)
 		}
 		else
 		{
+			
 			delete_all(&shell);
+			
 			if (shell.ev)
 				delete_env_lst(shell.ev, lst_size_env(shell.ev));
-			if (shell.path)
-				delete_path(shell.path, 0);
 			ft_putstr_fd(1, "exit\n");
-			exit (0);
+			exit (1);
 		}
-	}
-		if (shell.ev)
-			delete_env_lst(shell.ev, lst_size_env(shell.ev));
+	}	
+	printf("end of minishell\n");
+//	if (shell.ev)
+//		delete_env_lst(shell.ev, lst_size_env(shell.ev));
 	return 0;
 }

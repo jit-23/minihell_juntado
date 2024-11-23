@@ -6,12 +6,13 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 23:39:38 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/13 18:45:22 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/22 04:07:52 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 void delete_var(t_shell *sh, char *env_var);
+t_env *search_env_var(t_shell *sh, char *env_var);
 
 
 /*				pwd				*/
@@ -46,26 +47,100 @@ void ft_env(t_shell *sh)
 
 /*			export */
 
+static t_env *alpha_order(t_shell *sh)
+{
+	t_env *a;
+	t_env *b;
+	t_env *lowest;
+	char *name = /* NULL; */sh->ev->env_name;
+	//printf("name - .%s.\n", name);
+	a = sh->ev;
+	b = sh->ev;
+	while (a)
+	{
+		if (a->prev == NULL)
+			
+		if (a->displayed == false)
+		{
+			if ((ft_strncmp(a->env_name, name, ft_strlen(name)) < 0 )) // a = 'a' || b = 'A';
+				name = a->env_name;
+		}
+		a = a->next;
+	}
+	//printf("first one  - > .%s.\n", name);
+	lowest = search_env_var(sh, name); 
+	lowest->displayed = true;
+	return (lowest);
+}
+
+static int ft_listsize(t_env *ev)
+{
+	t_env	*temp;
+	int		count;
+
+	count = 0;
+	temp = ev;
+	if (!ev)
+		return (0);
+	while (temp != NULL)
+	{
+		temp = temp->next;
+		count++;
+	}
+	return (count);
+}
+
+static int all_true(t_env *ev)
+{
+	t_env *tmp;
+
+	tmp = ev;
+	while(tmp)
+	{
+		if (tmp->displayed == false)
+		{
+		//	printf("tmp->disp = .%s.\n", tmp->env_name);
+			return (1);
+		}
+		tmp = tmp->next;
+	}
+	return 0;
+} 
+
 void display_exported_envs(t_shell *sh)
 {
 	t_env *ptr;
 
+	int sz;
+	int i;
+
+//	printf("q\n");
+	i = 0;
+	sz = ft_listsize(sh->ev);
+	//printf("q\n");
+	
 	ptr = sh->ev;
-	while(sh->ev)
+	//printf("sz - %d\n", sz);
+	while(/* i < sz */all_true(sh->ev))
 	{
+		
+		ptr = alpha_order(sh);
+		//if (ptr)
+		//	printf("ptr - name : %s\n", ptr->env_name);
 		ft_putstr_fd(1, "declare -x ");
-		ft_putstr_fd(1,sh->ev->env_name);
+		ft_putstr_fd(1,ptr->env_name);
 		ft_putstr_fd(1,"=");
-		ft_putstr_fd(1,sh->ev->env_value);
+		ft_putstr_fd(1,ptr->env_value);
+		//printf("\t\t\t\t%p\n",ptr);
 		ft_putstr_fd(1,"\n");		
-		sh->ev = sh->ev->next;
+		i++;
 	}
-	sh->ev = ptr;
+	//sh->ev = ptr;
 	delete_all(sh);
 	
 }
 
-static void insert_var(t_shell *sh, t_exec *ex)
+static void insert_var(t_shell *sh, char *a, char *c)
 {
 	t_env *new;
 	t_env *last;
@@ -76,11 +151,11 @@ static void insert_var(t_shell *sh, t_exec *ex)
 	last = new;
 	new->next = malloc(sizeof(t_env));
 	new = new->next;
-	new->env_name = ft_strdup(ex->args[1]);
-	if (!ex->args[3])
+	new->env_name = ft_strdup(a);
+	if (c)
 		new->env_value = ft_strdup("");
 	else
-		new->env_value = ft_strdup(ex->args[3]);
+		new->env_value = ft_strdup(c);
 	new->next = NULL;
 	new->prev = last;
 }
@@ -103,17 +178,46 @@ static void manage_var(t_shell *sh, t_exec *exec)
 {
 	if (search_var(sh, exec->args[1]))
 		delete_var(sh, exec->args[1]);
-	insert_var(sh, exec);	
+	insert_var(sh, exec->args[1], exec->args[3]);
 }
 
 void ft_export(t_shell *sh, t_exec *ex)
 {
-	if (!ex->args[1])
+	if (!ex->args[1]) // export sozinho.
+	{
+		printf("0\n");	
 		display_exported_envs(sh);
-	if (!ex->args[2] || (ex->args[2] && ft_strncmp(ex->args[2], "=", 1)))
-		return ;
+	}
+	else if (ex->args[1])
+	{
+		if (!ex->args[2]) // export "name"
+		{
+			printf("1\n");
+			manage_var(sh,ex);
+		}
+		else if (ex->args[2][0] != '=')
+		{
+			printf("2\n");
+			perror("adsasdasddas\n");
+		}
+		else if(ex->args[2][0] == '=' && !ex->args[3]) // export "name" "="  
+		{
+			printf("3\n");
+			manage_var(sh, ex);
+		}
+		else if (ex->args[2][0] == '=' && ex->args[3] && !ex->args[4])
+		{
+			printf("4\n");
+			manage_var(sh, ex);
+		}
+		else
+			perror("invalid number of args\n");
+	}
 	else
+	{
+			printf("5\n");
 		manage_var(sh, ex);
+	}
 
 }
 
@@ -123,17 +227,10 @@ t_env *search_env_var(t_shell *sh, char *env_var)
 	t_env *search;
 
 	search = sh->ev;
-	printf("start\n");
 	while(search && strncmp(search->env_name, env_var, ft_strlen(search->env_name)))
 		search = search->next;
-	printf("done\n");
-	if (search)
-		printf("search = %s\n", search->env_name);
 	if (!search)
-	{
-		printf("noooo\n");
 		return (NULL);
-	}
 	return (search);
 }
 
@@ -231,19 +328,128 @@ void ft_echo(t_shell *sh, t_exec *ex)
 	return ;
 }
 /* ft_cd.c */
+//cd: fff: No such file or directory
+
+static void update_pwds(t_shell *sh, char *old_pwd)
+{
+	t_env *pwds;
+	char *dir;
+
+	dir = NULL;
+	dir = getcwd(dir, 100);
+	pwds = search_env_var(sh, "OLDPWD");
+	free(pwds->env_value);
+	pwds->env_value = ft_strdup(old_pwd/*  */);
+	pwds = search_env_var(sh, "PWD");
+	free(pwds->env_value);
+	pwds->env_value = ft_strdup(dir);
+	free(dir);
+
+}
+
+void execute_cd(t_shell *sh, t_exec *ex)
+{
+	char *name;
+	char *value;
+	char *old_pwd;
+	
+	old_pwd = NULL;
+	name = NULL;
+	value = NULL;
+	old_pwd = getcwd(old_pwd, 100);
+	if (chdir(ex->args[1]) == -1)
+	{
+		ft_putstr_fd(2, "cd : ");
+		ft_putstr_fd(2, ex->args[1]);
+		ft_putstr_fd(2, ": No such file or directory\n");
+		return ;
+	}
+	update_pwds(sh, old_pwd);
+	free(old_pwd);
+}
+static void go_home(t_shell *sh)
+{
+	t_env *target;
+	char *home;
+	char *old_pwd;
+
+	old_pwd = NULL;
+	old_pwd = getcwd(old_pwd, 100);
+	target = search_env_var(sh, "HOME");
+	home = target->env_value;
+	if (chdir(home) != 0)
+	{
+		ft_putstr_fd(2, "cd : ");
+		ft_putstr_fd(2, home);
+		ft_putstr_fd(2, ": No such file or directory\n");
+		return ;
+	}
+	update_pwds(sh, old_pwd);
+	free(old_pwd);
+}
+
+static void go_back(t_shell *sh)
+{
+	char *olddir;
+	t_env *target;
+	char *dir;
+
+	dir = NULL;
+	dir = getcwd(dir, 100);
+	target = search_env_var(sh, "OLDPWD");
+	olddir = target->env_value;
+	chdir(olddir);
+	update_pwds(sh, dir);
+	free(dir);
+}
 
 void ft_cd(t_shell *sh, t_exec *ex)
 {
-	if (ex->args[2])
+	if (!ex->args[1])
+		go_home(sh);
+	else if (ex->args[2])
 	{
 		ft_putstr_fd(2, "too many arguments\n");
 		sh->exitcode = 1;
 	}
-	//else if (!ex->args[1] || !ft_strncmp(ex->args[1], "/home/$USER", ft_strlen(ex->args[1])))
-	//	go_to_home_dir(sh, ex);
-		
-		
+	else if (ex->args[1] && !ex->args[2])
+	{
+		if (!ft_strncmp(ex->args[1], "..", 2))
+			go_back(sh);
+		else
+			execute_cd(sh,ex);
+	}
+	sh->exitcode = 0;
 }
+
+static void ft_exit(t_shell *sh, t_exec *ex)
+{
+	int	i;
+
+	i = 0;
+	if (!ex->args[1])
+		exit(0);
+	else if (ex->args[3])
+			perror("handle msg error (exit)\n");
+	if (ex->args[1][0] == '+')
+	{
+		if (!ex->args[2])
+			perror("handle msg error (exit)\n");
+		if (ex->args[2])
+		{
+			if(!ft_isdigit(ex->args[2][0]))
+				perror("handle msg error (exit)\n");
+			else
+				sh->exitcode = ft_atoi(ex->args[2]);
+		}
+	}
+}
+	
+	//while(ex->args[1][i])
+	//{/* como eu lido com + como um token so, verifica separadamente se existe aqui ou nao. vai ser chato, mas olha
+	//prefiro lidar com isso aqui do que no parser, este e o unico caso em que preciso lidar com isto */
+	//	if (ft_isdigit(ex->args[1][i]) && (ex->args[1][i] != '-' && ex->args[1][i] != '+'))
+	//}
 
 int is_builtin(char *cmd)
 {
@@ -276,6 +482,8 @@ void execute_builtin(t_exec *ex, char *cmd,t_shell *sh)
 		ft_unset(sh, ex);
 	else if (!strncmp(cmd, "echo", ft_strlen(cmd)))
 		ft_echo(sh, ex);
-	else if (!strncmp(cmd, "echo", ft_strlen(cmd)))
+	else if (!strncmp(cmd, "cd", ft_strlen(cmd)))
 		ft_cd(sh, ex);
+	else if(!strncmp(cmd, "cd", ft_strlen(cmd)))
+		ft_exit(sh, ex);
 }

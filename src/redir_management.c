@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 06:43:53 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/08 00:22:46 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/14 17:46:57 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ static char *execute_heredoc(t_redir *red, t_shell *sh)
 		delete_all(sh);
 	}
 	else
-		waitpid(pid, &status, 0);
+	/* atualizar o signal do pai, para ignorar cntrl + c */
+		waitpid(pid, &status, 0);// exit code also
 	return (file_name);
 }
 

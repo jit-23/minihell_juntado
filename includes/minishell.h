@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 05:59:56 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/13 18:36:38 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/19 22:25:56 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ struct	s_env
 	char	*env_value;
 	t_env	*next;
 	t_env	*prev;
+	bool	displayed;
 };
 
 struct	s_cmd
@@ -188,7 +189,7 @@ typedef struct s_shell
 	int		ret;	// need innitialization
 	int		no_exec;
 
-	int		exitcode;
+	unsigned char	exitcode;
 	int heredoc_flag;
 
 	int heredoc_tmp_file;
@@ -206,6 +207,8 @@ typedef struct s_shell
 /* MAIN. */
 // void print_loop(char **s);
 int		get_rid_off(char *alloced_mem);
+void	delete_path(char **path, int i);
+
 int		count_word_size(char *cmdl, int i, int count, t_placing placing);
 /* ANALISE.C */
 void	analise_terminal_input(t_shell *shell, char *cmdline);

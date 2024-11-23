@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 00:04:43 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/07/30 08:30:31 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/19 22:26:54 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ t_env	*new_env_node(char *env)
 	new_node->env_name = get_name(env);
 	new_node->env_value = get_env_value(env);
 	new_node->next = NULL;
+	new_node->displayed = false;
 	return (new_node);
 }
 

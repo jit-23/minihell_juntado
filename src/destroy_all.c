@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 17:07:57 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/13 16:25:28 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/14 17:29:24 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ void	delete_all(t_shell *shell)
 		free(shell->token_list);
 	if (shell->root)
 		delete_tree(shell->root);
+	if (shell->path)
+		delete_path(shell->path, 0);
 	//if (shell->ev)
 	//	delete_env_lst(shell->ev, lst_size_env(shell->ev));
 	//if (shell->path)
