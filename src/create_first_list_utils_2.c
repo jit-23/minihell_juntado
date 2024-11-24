@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 16:22:12 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/13 15:52:29 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/24 16:50:52 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ static int get_env_var_aux(t_shell *sh, char *env_var)
 	else
 		expanded_var = ft_strdup(env_var);
 	add_to_list(sh->token_list, expanded_var, WORD, DEFAULT);
+	return (ft_strlen(env_var));
 }
 
 int	get_env_var(char *cmdl, int i, t_shell *sh, t_placing placing)

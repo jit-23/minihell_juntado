@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 05:59:56 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/19 22:25:56 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/24 21:59:36 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ struct	s_env
 	char	*env_value;
 	t_env	*next;
 	t_env	*prev;
+	int		index;
 	bool	displayed;
 };
 
@@ -352,8 +353,24 @@ void delete_hiden_files(t_shell *sh);
 void ft_pwd(t_shell *sh);
 int is_builtin(char *cmd);
 void execute_builtin(t_exec *ex, char *cmd,t_shell *sh);
+int ft_listsize(t_env *ev);
 
-
-
+void ft_env(t_shell *sh);
+void ft_export(t_shell *sh, t_exec *ex);
+static void manage_var(t_shell *sh, t_exec *exec);
+static void organized_export(t_shell *sh);
+static void organized_export(t_shell *sh);
+void display_sorted_exported_envs(t_shell *sh);
+void display_it(t_env *display);
+void ft_echo(t_shell *sh, t_exec *ex);
+void print_echo_flags(t_shell *sh, t_exec *ex, int i);
+int check_flag(t_shell *sh, t_exec *ex);
+void ft_unset(t_shell *sh, t_exec *ex);
+void ft_cd(t_shell *sh, t_exec *ex);
+void go_home(t_shell *sh);
+void go_back(t_shell *sh);
+void execute_cd(t_shell *sh, t_exec *ex);
+void ft_exit(t_shell *sh, t_exec *ex);
+int aux(t_env **ptr, t_env **b, int option);
 
 #endif
