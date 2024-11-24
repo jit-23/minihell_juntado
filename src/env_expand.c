@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 00:04:43 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/19 22:26:54 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/23 22:45:51 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,15 @@ t_env	*new_env_node(char *env)
 	return (new_node);
 }
 
+static void define_index(t_env *head)
+{
+	while(head)
+	{
+		head->index  = -1;
+		head = head->next;
+	}
+}
+
 t_env	*expand_env(t_shell *shell, char **env)
 {
 	t_env	*ptr;
@@ -97,5 +106,6 @@ t_env	*expand_env(t_shell *shell, char **env)
 		}
 	}
 	ptr->next = NULL;
+	define_index(head);
 	return (head);
 }

@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 23:39:38 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/23 19:44:37 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/24 02:14:42 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,13 +144,16 @@ static void display_sorted_exported_envs(t_shell *sh)
 	t_env *b = sh->ev->next;
 	t_env *ptr;
 	printf("flag1\n");
-	while (a)
+	if/* while */ (a)
 	{
 		b = sh->ev;
 		while(b)
 		{
 			if (strncmp(a->env_name, b->env_name, ft_strlen(a->env_name)) > 0)
 			{
+				printf("a->env_name - %s\n",a->env_name);
+				printf("b->env_name - %s\n",b->env_name);
+				printf("====================\n");
 				if (a->displayed == 0)
 					ptr = a;
 			}
@@ -159,27 +162,40 @@ static void display_sorted_exported_envs(t_shell *sh)
 		a = a->next;
 	}
 	ptr->displayed = 1;
-	ptr->index = index++;	
+	ptr->index = index++;
+	printf("/t/tptr - .%s.\n", ptr->env_name);
+	t_env *c;
+	c = sh->ev;
+	while(c)
+	{
+		printf("|.%s.||.%d.|\n", c->env_name,c->index);
+		c = c->next;
+	}
 }
 
 static void organized_export(t_shell *sh)
 {
 	int s;
+	int flag;
+	t_env *a;
+	int i;
 
 	display_sorted_exported_envs(sh);
 	s = ft_listsize(sh->ev);
-	int i = -1;
-	t_env *a = sh->ev;
-	int flag = 1;
+	a = sh->ev;
+	i = -1;
+	flag = 1;
 	while(++i < s)
 	{
 		a = sh->ev;
 		if (a->index != flag)
 		{
+			printf("index - %d\nflag - .%d.\n", a->index, flag);
 			while(a->index != flag)
-				a=a->next;
-		}
+				a = a->next;
+		} 
 		printf(".%s.\n", a->env_name);
+		flag++;
 	}
 }
 
