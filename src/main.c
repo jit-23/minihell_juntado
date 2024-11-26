@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 17:08:42 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/14 17:28:58 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/26 01:45:15 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,11 @@ void get_path_env(t_shell *shell, char **envp)
 
 void  init_shell(t_shell *shell, char **ev)
 {
+	
+	dup2(0,shell->fdin);
+	dup2(1,shell->fdout);
+	//shell->fdin = dup(STDIN_FILENO);
+	//shell->fdout = dup(STDOUT_FILENO);
 	shell->env = ev;
 	shell->root = NULL;
 	get_path_env(shell, ev);
@@ -115,6 +120,8 @@ int main(int ac,char **av ,char **ev)
 	if (ac != 1)
 		return (ft_putstr_fd(2, "invalid number of arguments:"),1);
 	shell.exitcode = 0;
+	shell.fdin = dup(STDIN_FILENO);
+	shell.fdout = dup(STDOUT_FILENO);
 	shell.ev = expand_env(&shell, ev);	
 	while (1)
 	{
@@ -128,18 +135,13 @@ int main(int ac,char **av ,char **ev)
 			delete_all(&shell);
 		}
 		else
-		{
-			
-			delete_all(&shell);
-			
+		{			
+			delete_all(&shell);	
 			if (shell.ev)
 				delete_env_lst(shell.ev, lst_size_env(shell.ev));
 			ft_putstr_fd(1, "exit\n");
 			exit (1);
 		}
 	}	
-	printf("end of minishell\n");
-//	if (shell.ev)
-//		delete_env_lst(shell.ev, lst_size_env(shell.ev));
 	return 0;
 }

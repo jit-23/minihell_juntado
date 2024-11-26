@@ -30,13 +30,13 @@ SRC_FILES:=  main.c \
 					fd_utils.c\
 					tree_encrementation.c\
 					execution.c\
-					is_builtin/ft_pwd.c\
-					is_builtin/ft_env.c\
-					is_builtin/ft_export.c\
-					is_builtin/ft_unset.c\
-					is_builtin/ft_echo.c\
-					is_builtin/ft_cd.c\
-					is_builtin/ft_exit.c\
+					ft_pwd.c\
+					ft_env.c\
+					ft_export.c\
+					ft_unset.c\
+					ft_echo.c\
+					ft_cd.c\
+					ft_exit.c\
 					is_builtin.c\
 #					exec.c\
 #					pipe_utils.c \

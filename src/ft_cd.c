@@ -6,11 +6,11 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 21:52:23 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/24 21:53:22 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/25 01:09:27 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../includes/minishell.h"
 
 void execute_cd(t_shell *sh, t_exec *ex)
 {

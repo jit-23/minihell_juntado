@@ -1,27 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_utils.c                                         :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/24 21:57:09 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/24 21:57:27 by fde-jesu         ###   ########.fr       */
+/*   Created: 2024/11/24 21:42:16 by fde-jesu          #+#    #+#             */
+/*   Updated: 2024/11/25 01:09:37 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../includes/minishell.h"
 
-int search_var(t_shell *sh, char *var)
+void ft_env(t_shell *sh)
 {
-	t_env *tmp;
+	t_env *ptr;
 
-	tmp = sh->ev;
-
-	while(tmp)
+	ptr = sh->ev;
+	while(sh->ev)
 	{
-		if (ft_strncmp(var, sh->ev->env_name, ft_strlen(sh->ev->env_name)))
-			return 1;
+		ft_putstr_fd(1,sh->ev->env_name);
+		ft_putstr_fd(1,"=");
+		ft_putstr_fd(1,sh->ev->env_value);
+		ft_putstr_fd(1,"\n");		
+		sh->ev = sh->ev->next;
 	}
-	return 0;
+	sh->ev = ptr;
+    sh->exitcode = 0;
 }

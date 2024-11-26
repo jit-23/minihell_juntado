@@ -6,11 +6,11 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 21:43:26 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/24 21:45:06 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/25 01:15:04 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../includes/minishell.h"
 
 void ft_pwd(t_shell *sh)
 {
@@ -47,4 +47,21 @@ int aux(t_env **ptr, t_env **b, int option)
 		}
 	}
 	return (0);
+}
+
+void update_pwds(t_shell *sh, char *old_pwd)
+{
+	t_env *pwds;
+	char *dir;
+
+	dir = NULL;
+	dir = getcwd(dir, 100);
+	pwds = search_env_var(sh, "OLDPWD");
+	free(pwds->env_value);
+	pwds->env_value = ft_strdup(old_pwd/*  */);
+	pwds = search_env_var(sh, "PWD");
+	free(pwds->env_value);
+	pwds->env_value = ft_strdup(dir);
+	free(dir);
+
 }

@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 23:39:38 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/24 21:58:17 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/11/25 01:17:02 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -353,22 +353,7 @@ void delete_var(t_shell *sh, char *env_var)
 /* ft_cd.c */
 //cd: fff: No such file or directory
 
-static void update_pwds(t_shell *sh, char *old_pwd)
-{
-	t_env *pwds;
-	char *dir;
 
-	dir = NULL;
-	dir = getcwd(dir, 100);
-	pwds = search_env_var(sh, "OLDPWD");
-	free(pwds->env_value);
-	pwds->env_value = ft_strdup(old_pwd/*  */);
-	pwds = search_env_var(sh, "PWD");
-	free(pwds->env_value);
-	pwds->env_value = ft_strdup(dir);
-	free(dir);
-
-}
 
 /* void execute_cd(t_shell *sh, t_exec *ex)
 {
@@ -390,7 +375,7 @@ static void update_pwds(t_shell *sh, char *old_pwd)
 	update_pwds(sh, old_pwd);
 	free(old_pwd);
 } */
-static void go_home(t_shell *sh)
+/*  void go_home(t_shell *sh)
 {
 	t_env *target;
 	char *home;
@@ -409,7 +394,7 @@ static void go_home(t_shell *sh)
 	}
 	update_pwds(sh, old_pwd);
 	free(old_pwd);
-}
+} */
 
 /* static void go_back(t_shell *sh)
 {
@@ -426,25 +411,7 @@ static void go_home(t_shell *sh)
 	free(dir);
 } */
 
-void ft_cd(t_shell *sh, t_exec *ex)
-{
-	if (!ex->args[1])
-		go_home(sh);
-	else if (ex->args[2])
-	{
-		ft_putstr_fd(2, "too many arguments\n");
-		sh->exitcode = 1;
-	}
-	else if (ex->args[1] && !ex->args[2])
-	{
-		if (!ft_strncmp(ex->args[1], "..", 2))
-			go_back(sh);
-		else
-			execute_cd(sh,ex);
-	}
-	sh->exitcode = 0;
-}
-
+/* search_var */
 /* static void ft_exit(t_shell *sh, t_exec *ex)
 {
 	int	i;

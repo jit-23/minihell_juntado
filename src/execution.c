@@ -127,6 +127,7 @@ void run_cmd(t_shell *sh, t_exec *ex)
 
 	if (ex->args[0] == NULL)
 		return ;
+	perror("run_cmd\n");
 	if (is_builtin(ex->args[0]))
 	{
 		execute_builtin(ex, ex->args[0], sh);
@@ -135,7 +136,7 @@ void run_cmd(t_shell *sh, t_exec *ex)
 	pid1 = fork();
 	if (pid1 == 0)
 	{
-		
+		perror("inside \n");
 		if (execve(ex->args[0], ex->args, sh->env) == -1)
 		{
 			ft_putstr_fd(2, ex->args[0]);
@@ -149,13 +150,13 @@ void run_cmd(t_shell *sh, t_exec *ex)
 		waitpid(pid1, &status, 0);
 		if (WIFEXITED(status))
 			sh->exitcode = WEXITSTATUS(status);
-
 	}
 }
 
 int get_file(t_shell *sh, t_redir *redir)
 {
 	int fd;
+	
 	
 	if (redir->mode == 0) // < redirection of input
 	{
@@ -172,7 +173,6 @@ int get_file(t_shell *sh, t_redir *redir)
 		if (fd < 0)
 			ft_putstr_fd(2, "bash: FILE: Permission denied"); // troca isto
 		dup2(fd, STDOUT_FILENO);
-		//printf("\t\t\t2\n");
 		return (fd);
 	}
 	else  if (redir->mode == 2) // >>
@@ -200,12 +200,15 @@ void run_redir(t_shell *sh, t_redir *redir)
 	int file;
 	t_exec *e;
 
+	printf("run_redir\n");
 	e = NULL;
 	file = get_file(sh, redir);
+	perror("run_redir1\n");
 	if (file < 0)
 		perror("redir error\n");
 	if (redir->cmd)
 	{
+	perror("run_redir3\n");
 		e = (t_exec *)redir->cmd;
 		if (!e->args[0])
 			run_tree(sh, NULL);
@@ -230,6 +233,7 @@ void run_tree(t_shell *sh, t_cmd *root)
 		else
 			waitpid(-1, NULL, 0);
 	}
+	ft_putstr_fd(2,"assadassafdfdsdsferrrrwrewrerew\n");
 }
 
 int	lstsize(t_env *lst)
@@ -271,8 +275,9 @@ void _handle_execution(t_shell *sh)
 	//update_signal();
 	//waitpid(pid, &wstatus, 0);
 	//wait_child(wstatus, sh);
-	//printf("here?");
+
 	delete_hiden_files(sh);
+	ft_putstr_fd(2, "here?\n");
 	return ;
 //	printf("size of ll - %d\n", lstsize(sh->ev));
 }

@@ -72,19 +72,15 @@ void	analise_terminal_input(t_shell *shell, char *cmdline)
 		printf("syntax error\n");
 		return ;
 	}
-	init_ast(shell);
-	/* head = shell->token_list->official_head;
-	printf("+++++++++++=\n");
-	while (head)
+	t_token *a;
+	a = shell->rl->official_head;
+	while(a)
 	{
-		printf("token   .%s.\n", head->token);
-		printf("placing .%d.\n", head->placing);
-		printf("type    .%d.\n", head->type);
-		printf("..........\n");
-		head = head->next;
-	} */
-
-	//print_tree(shell->root);
+		printf("token - .%s.\t",a->token);
+		printf("placing - .%d.\n",a->placing);
+		a = a->next;
+	}
+	init_ast(shell);
 	return ;
 }
 
