@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 18:37:43 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/07/30 08:30:23 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/07 03:41:01 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,8 @@ int	lst_size_tokens(t_token *head)
 void	delete_env_lst(t_env *head, int size)
 {
 	t_env	*del;
-	int		i;
 
-	i = -1;
+	(void)size;
 	del = (head);
 	while (del)
 	{

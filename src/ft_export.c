@@ -6,102 +6,19 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 21:30:54 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/25 21:27:02 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/28 00:47:55 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void display_it(t_env *display)
+void	insert_var(t_shell *sh, char *a, char *c)
 {
-	if (display->env_name[0] == '_' && display->env_name[1] == '\0')
-		return ;
-	ft_putstr_fd(1, "declare -x ");
-	ft_putstr_fd(1, display->env_name);
-	ft_putstr_fd(1, "=");
-	ft_putstr_fd(1, "\"");
-	ft_putstr_fd(1, display->env_value);
-	ft_putstr_fd(1, "\"");
-	ft_putstr_fd(1, "\n");
-}
-
-void display_sorted_exported_envs(t_shell *sh)
-{
-	//static int index;
-	t_env *b = sh->ev->next;
-	t_env *ptr;
-
-	ptr = sh->ev;
-	//index = 1;
-	while(b)
-	{
-		if (aux(&ptr, &b, 1) == 1)
-			break;
-		if (aux(&ptr, &b, 2) == 1)
-			break;
-		if (strncmp(ptr->env_name, b->env_name, ft_strlen(ptr->env_name)) > 0)
-		{
-			if (ptr->displayed == 0)
-				ptr = b;
-			b = b->next;
-		}
-		else
-			b = b->next;
-	}
-	display_it(ptr);
-	ptr->displayed = 1;
-	//ptr->index = index++;
-}
-
-void organized_export(t_shell *sh)
-{
-	int		flag;
-	int		i;
-	t_env	*a;
-
-	a = sh->ev;
-	i = -1;
-	while(++i < ft_listsize(a))
-		display_sorted_exported_envs(sh);
-	i = -1;
-	while(a)
-	{
-		a->displayed = 0;
-		a = a->next;
-	}
-}
-
-int search_var(t_shell *sh, char *var)
-{
-	t_env *tmp;
-
-	tmp = sh->ev;
-	//printf("var - .%s.\n", var);
-	//printf("var - .%s.\n", var);
-	while(tmp)
-	{
-		if ( 0 == ft_strncmp(var, tmp->env_name, ft_strlen(var)))
-			return 1;
-		tmp = tmp->next;
-	}
-	return 0;
-}
-
-
-void manage_var(t_shell *sh, t_exec *exec)
-{
-	if (search_var(sh, exec->args[1]))
-		delete_var(sh, exec->args[1]);
-	insert_var(sh, exec->args[1], exec->args[3]);
-}
-
-void insert_var(t_shell *sh, char *a, char *c)
-{
-	t_env *new;
-	t_env *last;
+	t_env	*new;
+	t_env	*last;
 
 	new = sh->ev;
-	while(new->next)
+	while (new->next)
 		new = new->next;
 	last = new;
 	new->next = malloc(sizeof(t_env));
@@ -117,23 +34,58 @@ void insert_var(t_shell *sh, char *a, char *c)
 	new->displayed = 0;
 }
 
-void ft_export(t_shell *sh, t_exec *ex)
+static int	check_export_str(char *str)
 {
-	if (!ex->args[1]) // export sozinho.
-		organized_export(sh);
-	else if (ex->args[1])
+	int	i;
+
+	i = -1;
+	if (ft_isdigit(str[0]))
+		return (1);
+	while (str[++i])
+		if (str[i] == '-' || str[i] == '+' || str[i] == '=')
+			return (1);
+	return (0);
+}
+
+void	manage_var(t_shell *sh, char *name, char *value)
+{
+	if (search_var(sh, name))
+		delete_var(sh, name);
+	insert_var(sh, name, value);
+}
+
+void	ft_export_error_msg(t_shell *sh, char *msg)
+{
+	ft_putstr_fd(2, "export: ");
+	ft_putstr_fd(2, msg);
+	ft_putstr_fd(2, " : not a valid identifier\n");
+	g_sign = 1;
+}
+
+int	ft_export(t_shell *sh, t_exec *ex)
+{
+	int	i;
+
+	i = 1;
+	if (!ex->args[1])
+		return (organized_export(sh), 0);
+	while (ex->args[i])
 	{
-		if (!ex->args[2]) // export "name"
-			manage_var(sh,ex);
-		else if (ex->args[2][0] != '=')
-			perror("adsasdasddas\n");
-		else if(ex->args[2][0] == '=' && !ex->args[3]) // export "name" "="  
-			manage_var(sh, ex);
-		else if (ex->args[2][0] == '=' && ex->args[3] && !ex->args[4])
-			manage_var(sh, ex);
-		else
-			perror("invalid number of args\n");
+		if (check_export_str(ex->args[i]))
+			return (ft_export_error_msg(sh, ex->args[i]), 1);
+		if (ex->args[i] && (ex->args[i + 1] && ex->args[i + 1][0] == '='))
+		{
+			manage_var(sh, ex->args[i], ex->args[i + 2]);
+			if (ex->args[2])
+				i += 3;
+			else
+				break ;
+		}
+		else if (ex->args[i])
+		{
+			manage_var(sh, ex->args[i], ex->args[i + 2]);
+			i++;
+		}
 	}
-	else
-		manage_var(sh, ex);
+	return (0);
 }

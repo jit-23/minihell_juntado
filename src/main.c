@@ -6,21 +6,13 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 17:08:42 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/26 01:45:15 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/28 05:59:47 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-//int g_status_exit_val;
-
-
-//#include "../includes/env.h"
-
-//#define BLUE 			\033 [0;34m
-//#define default_colour	\033 [0m
-
-static void	get_prompt(t_shell *shell)
+void	get_prompt(t_shell *shell)
 {
 	char	*dir;
 
@@ -33,43 +25,15 @@ static void	get_prompt(t_shell *shell)
 	free(dir);
 }
 
-static void	print_env(t_env *e, char **ev)
-{
-	int	i;
-
-	i = 0;
-	while (e)
-	{
-		printf(RED "%s\n", e->env_name);
-		printf(CSET "%s\n", ev[i]);
-		e = e->next;
-		i++;
-	}
-}
-
-static void	print_vals(t_env *e, char **ev)
-{
-	int	i;
-
-	i = 0;
-	while (e)
-	{
-		printf(RED ".%s.\n", e->env_value);
-		printf(CSET "%s\n", ev[i]);
-		e = e->next;
-		i++;
-	}
-}
-
-void get_path_env(t_shell *shell, char **envp)
+void	get_path_env(t_shell *shell, char **envp)
 {
 	int	i;
 
 	i = -1;
 	shell->path = NULL;
-	while(envp[++i] != NULL)
+	while (envp[++i] != NULL)
 	{
-		if(ft_strncmp(envp[i], "PATH=", 4) == 0)
+		if (ft_strncmp(envp[i], "PATH=", 4) == 0)
 		{
 			shell->path = ft_split(&envp[i][5], ':');
 			break ;
@@ -77,13 +41,8 @@ void get_path_env(t_shell *shell, char **envp)
 	}
 }
 
-void  init_shell(t_shell *shell, char **ev)
+void	init_shell(t_shell *shell, char **ev)
 {
-	
-	dup2(0,shell->fdin);
-	dup2(1,shell->fdout);
-	//shell->fdin = dup(STDIN_FILENO);
-	//shell->fdout = dup(STDOUT_FILENO);
 	shell->env = ev;
 	shell->root = NULL;
 	get_path_env(shell, ev);
@@ -91,57 +50,36 @@ void  init_shell(t_shell *shell, char **ev)
 	shell->cmd_line = NULL;
 	shell->token_list = NULL;
 	shell->stop_iteration = false;
-	shell->token_list = (t_lexer *)malloc( sizeof(t_lexer));
-	shell->rl = (t_lexer *)malloc( sizeof(t_lexer));
+	shell->token_list = (t_lexer *)malloc(sizeof(t_lexer));
+	shell->rl = (t_lexer *)malloc(sizeof(t_lexer));
 	shell->token_list->head = NULL;
 	shell->token_list->official_head = NULL;
 	shell->rl->head = NULL;
 	shell->rl->official_head = NULL;
 	shell->in = dup(STDIN);
 	shell->out = dup(STDOUT);
-	reset_fd(shell);
 	shell->ret = 0;
 	shell->heredoc_tmp_file = 65;
 	shell->heredoc_flag = 0;
 	shell->no_exec = 0;
 }
 
-void	delete_path(char **path, int i)
+int	main(int ac, char **av, char **ev)
 {
-	while(path[i])
-		free(path[i++]);
-	free(path);
-}
+	t_shell	shell;
 
-int main(int ac,char **av ,char **ev)
-{
-	t_shell shell;
-	
+	(void)av;
+	ft_memset(&shell, 0, sizeof(t_shell));
 	if (ac != 1)
-		return (ft_putstr_fd(2, "invalid number of arguments:"),1);
-	shell.exitcode = 0;
-	shell.fdin = dup(STDIN_FILENO);
-	shell.fdout = dup(STDOUT_FILENO);
-	shell.ev = expand_env(&shell, ev);	
+		return (ft_putstr_fd(2, "invalid number of arguments:"), 1);
+	core_values(&shell, ev);
 	while (1)
 	{
-		init_shell(&shell, ev);
-		handle_signal();
-		get_prompt(&shell);
+		default_values(&shell, ev);
 		if (shell.cmd_line)
-		{
-			analise_terminal_input(&shell, shell.cmd_line);
-			_handle_execution(&shell);
-			delete_all(&shell);
-		}
+			create_execute_tree(&shell, shell.cmd_line);
 		else
-		{			
-			delete_all(&shell);	
-			if (shell.ev)
-				delete_env_lst(shell.ev, lst_size_env(shell.ev));
-			ft_putstr_fd(1, "exit\n");
-			exit (1);
-		}
-	}	
-	return 0;
+			end_loop(&shell);
+	}
+	return (0);
 }

@@ -8,27 +8,28 @@ BLUE=\033[0;34m
 default_colour=\033[0m
 
 SRC_FILES:=  main.c \
-					analise.c \
+					analise.c\
 					check_syntax.c\
 					signals.c\
 					create_first_list_utils_1.c\
 					create_first_list_utils_2.c\
 					create_first_list.c\
 					create_second_list.c\
-					list_utils.c \
+					list_utils.c\
 					delete_tree.c\
 					destroy_all.c\
 					destroy_utils.c\
 					env_expand.c\
 					env_token_functions.c\
-					init_AST_structs.c\
 					init_AST.c\
+					init_AST_structs.c\
+					init_AST_exec_struct.c\
+					init_AST_utils.c\
+					init_AST_pipe_struct.c\
 					lexer_utils.c\
 					redir_management.c\
 					search_through_tokens.c\
 					token_utils.c\
-					fd_utils.c\
-					tree_encrementation.c\
 					execution.c\
 					ft_pwd.c\
 					ft_env.c\
@@ -38,21 +39,15 @@ SRC_FILES:=  main.c \
 					ft_cd.c\
 					ft_exit.c\
 					is_builtin.c\
-#					exec.c\
-#					pipe_utils.c \
-	
-#		mini_cd.c\
-#		mini_echo.c\
-#		mini_env.c\
-#		mini_exit.c\
-#		mini_export.c\
-#		mini_pwd.c\
-#		mini_unset.c\
-					string_funcs.c
-#					init_tree.c\
-					tree_validation.c\
-
-MAKE:= make -j  -C
+					heredoc_execution.c\
+					execute_redir.c\
+					execute_pipe.c\
+					execute_cmd.c\
+					ft_export_utils.c\
+					main_utils.c \
+					init_AST_exec_struct_utils.c\
+					execute_cmd_error.c
+MAKE:= make -C
 LIBFT_DIR:= includes/libft
 LIBFT:= includes/libft/libft.a
 

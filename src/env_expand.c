@@ -6,11 +6,10 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 00:04:43 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/23 22:45:51 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/07 23:48:07 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "../includes/env.h"
 #include "../includes/minishell.h"
 
 char	*get_env_value(char *env_var)
@@ -60,7 +59,6 @@ char	*get_name(char *env_var)
 }
 
 t_env	*new_env_node(char *env)
-		// prev e definido na funcao na qual este e chamada
 {
 	t_env	*new_node;
 
@@ -72,16 +70,16 @@ t_env	*new_env_node(char *env)
 	return (new_node);
 }
 
-static void define_index(t_env *head)
+static void	define_index(t_env *head)
 {
-	while(head)
+	while (head)
 	{
-		head->index  = -1;
+		head->index = -1;
 		head = head->next;
 	}
 }
 
-t_env	*expand_env(t_shell *shell, char **env)
+t_env	*expand_env(char **env)
 {
 	t_env	*ptr;
 	t_env	*a;

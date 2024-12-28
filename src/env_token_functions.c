@@ -6,11 +6,31 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 16:13:49 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/02 16:30:24 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/07 04:03:20 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+static char	*get_exit_code_var(int option)
+{
+	char	*dollar;
+
+	if (option == 2)
+	{
+		dollar = (char *)malloc(sizeof(char) * 3);
+		dollar[0] = '$';
+		dollar[1] = '?';
+		dollar[2] = '\0';
+	}
+	else if (option == 1)
+	{
+		dollar = (char *)malloc(sizeof(char) * 2);
+		dollar[0] = '$';
+		dollar[1] = '\0';
+	}
+	return (dollar);
+}
 
 char	*get_env_str(char *cmdl, int i)
 {
@@ -22,6 +42,8 @@ char	*get_env_str(char *cmdl, int i)
 	j = i + 1;
 	k = 0;
 	count = 1;
+	if (cmdl[i] == '$' && cmdl[i + 1] == '?')
+		return (get_exit_code_var(2));
 	while (cmdl[j] && !special_char(cmdl[j]) && !is_space(cmdl[j]))
 	{
 		count++;
@@ -40,6 +62,8 @@ int	valid_env(char *env_var, t_env *env_head)
 
 	env_var = &env_var[1];
 	head = env_head;
+	if (!env_var)
+		return (0);
 	while (head)
 	{
 		if (ft_strncmp(env_var, head->env_name, ft_strlen(env_var)) == 0)

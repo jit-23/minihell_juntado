@@ -1,54 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   search_through_tokens.c                            :+:      :+:    :+:   */
+/*   init_AST_pipe_struct.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/02 16:11:41 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/12/28 05:57:45 by fde-jesu         ###   ########.fr       */
+/*   Created: 2024/12/08 01:49:05 by fde-jesu          #+#    #+#             */
+/*   Updated: 2024/12/08 01:57:13 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	peek_token(t_token *checker, int var_nbr, ...)
+t_pipe	*last_pipe(t_pipe *root)
 {
-	va_list	ptr;
-	int		flag;
-	int		i;
-	char	*token;
-	char	*a;
+	t_pipe	*last_p;
 
-	i = -1;
-	flag = 1;
-	if (!checker)
-		return (0);
-	token = checker->token;
-	va_start(ptr, var_nbr);
-	if (token[0] == '<' && token[1] == '<' && token[2] == '\0')
-		return (0);
-	while (++i < var_nbr)
+	last_p = root;
+	while (last_p && last_p->type == _PIPE)
 	{
-		a = va_arg(ptr, char *);
-		flag = ft_strncmp(token, a, ft_strlen(a));
-		if (flag == 0 && (checker->placing == DEFAULT))
-			return (1);
+		if (last_p->right && last_p->right->type == _PIPE)
+			last_p = (t_pipe *)last_p->right;
+		else
+			break ;
 	}
-	va_end(ptr);
-	return (0);
+	return (last_p);
 }
 
-int	peek_future_tokens_type(t_token *head, t_type type)
+int	one_pipe_token(t_token *head, t_type type)
 {
 	t_token	*tmp;
+	int		counter;
 
+	counter = 0;
 	tmp = head;
 	while (tmp)
 	{
 		if (tmp->type == type)
-			return (1);
+			counter++;
 		tmp = tmp->next;
 	}
+	if (counter == 1)
+		return (1);
 	return (0);
 }

@@ -6,18 +6,16 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 22:18:06 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/10/24 16:22:36 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/07 04:48:05 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 t_token	*new_node(char *token, t_type type, t_placing placing)
-		// prev e definido na funcao na qual este e chamada
 {
 	t_token	*new_node;
-	//char *token2;
-	//token2 = strdup(token);
+
 	new_node = (t_token *)malloc(sizeof(t_token));
 	new_node->token = token;
 	new_node->type = type;
@@ -75,10 +73,13 @@ int	lst_size(t_token **head)
 void	add_to_list(t_lexer *token_list, char *word, t_type type,
 		t_placing placing)
 {
-	t_token	*head;
 	t_token	*prev;
 	t_token	*last;
 
+	prev = NULL;
+	last = NULL;
+	if (!word)
+		return ;
 	if (!token_list->head)
 	{
 		token_list->head = new_node(word, type, placing);

@@ -1,31 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mini_exit.c                                        :+:      :+:    :+:   */
+/*   execute_cmd_error.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/17 18:22:23 by eescalei          #+#    #+#             */
-/*   Updated: 2024/08/07 19:00:25 by fde-jesu         ###   ########.fr       */
+/*   Created: 2024/12/28 07:35:35 by fde-jesu          #+#    #+#             */
+/*   Updated: 2024/12/28 07:36:21 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	mini_exit(t_shell *shell)
+void	run_cmd_exit_msg(t_shell *sh, char *cmd)
 {
-	shell->stop_iteration = true;
-}
-
-
-/* temo que ver se o exit e o arg[0], caso contrario, ignora se */
-void	mini_exit_nando(int mode, t_shell *shell, t_exec *exec)
-{
-	if (ft_memcmp(exec->args[0], "exit\0", 5) == 1)
-		return ;
-	delete_all(shell);
-	if (mode == 1) // exit builtin
-		exit(EXIT_SUCCESS);
-	else if (mode == 0) /* outro exit, assim o valor da ultima acao fica ai */
-		exit(g_status_exit_val);
+	ft_putstr_fd(2, cmd);
+	ft_putstr_fd(2, ": command not found\n");
+	delete_all(sh);
+	if (sh->ev)
+		delete_env_lst(sh->ev, lst_size_env(sh->ev));
+	g_sign = 127;
+	exit(g_sign);
 }

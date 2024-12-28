@@ -1,0 +1,6 @@
+definir '$' quando estiver sozinho.
+definir os restantes exit codes
+definir as msg de error xdddd
+aprimorar os builtins
+signals quando ha heredocc
+ 

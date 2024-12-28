@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 06:42:43 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/10/28 16:07:39 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/28 06:06:31 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@ t_exec	*init_exec(void)
 {
 	t_exec	*exec;
 
-	exec = (t_exec *)calloc(2, sizeof(t_exec));
+	exec = (t_exec *)ft_calloc(2, sizeof(t_exec));
 	if (!exec)
 	{
-		ft_putstr_fd(2, "error on malloc\n");
+		ft_putstr_fd(2, ":Error on malloc\n");
 		return (NULL);
 	}
 	exec->type = _EXEC;

@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 07:30:46 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/11/13 14:48:40 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/28 00:47:55 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,33 +27,89 @@ int	special_char(char c)
 	return (0);
 }
 
-int	count_word_size(char *cmdl, int i, int count, t_placing placing)
+void	count_word_size_aux(int *i, int *count)
 {
+	(*i)++;
+	(*count)++;
+}
+
+int	count_word_size(char *cmdl, int i, t_shell *sh, t_placing placing)
+{
+	int	count;
+
+	(void)sh;
+	count = 0;
 	if (placing == DEFAULT)
 	{
 		while (cmdl[i] && !is_space(cmdl[i]) && !special_char(cmdl[i]))
-		{
-			count++;
-			i++;
-		}
+			count_word_size_aux(&i, &count);
 	}
 	else if (placing == IN_DQ)
 	{
-		printf("initial - %c\n", cmdl[i]);
+		while (cmdl[i] && cmdl[i] != '\"' && cmdl[i] != '$')
+			count_word_size_aux(&i, &count);
+	}
+	else if (placing == IN_SQ)
+	{
+		while (cmdl[i] && cmdl[i] != '\'')
+			count_word_size_aux(&i, &count);
+	}
+	return (count);
+}
+
+int	count_word_size_heredoc(char *cmdl, int i, t_shell *sh, t_placing placing)
+{
+	int	count;
+
+	(void)sh;
+	count = 1;
+	if (placing == DEFAULT)
+	{
+		while (cmdl[i] && !is_space(cmdl[i]) && !special_char(cmdl[i]))
+			count_word_size_aux(&i, &count);
+	}
+	else if (placing == IN_DQ)
+	{
+		while (cmdl[i] && cmdl[i] != '\"' && cmdl[i] != '$')
+			count_word_size_aux(&i, &count);
+	}
+	else if (placing == IN_SQ)
+	{
+		while (cmdl[i] && cmdl[i] != '\'')
+			count_word_size_aux(&i, &count);
+	}
+	return (count);
+}
+
+/* int	count_word_size_heredoc(char *cmdl, int i, \
+	t_shell *sh, t_placing placing)
+{
+	int	count;
+
+	count = 1;
+	if (placing == DEFAULT)
+		count_default(i, count, cmdl);
+	//{
+	//	while (cmdl[i] && !is_space(cmdl[i]) && !special_char(cmdl[i]))
+	//		count_word_size_aux(&i, &count);
+	//}
+	else if (placing == IN_DQ)
+	{
 		while (cmdl[i] && cmdl[i] != '\"')
 		{
-			printf("cmdl[%d] = .%c.\n", i, cmdl[i]);
-			count++;
-			i++;
+			if (cmdl[i] == '$' && cmdl[i] == '?')
+			{
+				i += 2;
+				count += ft_strlen(ft_itoa(g_sign));
+			}
+			else
+				count_word_size_aux(&i, &count);
 		}
 	}
 	else if (placing == IN_SQ)
 	{
 		while (cmdl[i] && cmdl[i] != '\'')
-		{
-			count++;
-			i++;
-		}
+			count_word_size_aux(&i, &count);
 	}
 	return (count);
-}
+} */

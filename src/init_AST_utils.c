@@ -1,29 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mini_pwd.c                                         :+:      :+:    :+:   */
+/*   init_AST_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/17 14:43:08 by eescalei          #+#    #+#             */
-/*   Updated: 2024/08/07 01:58:30 by fde-jesu         ###   ########.fr       */
+/*   Created: 2024/12/08 01:50:19 by fde-jesu          #+#    #+#             */
+/*   Updated: 2024/12/28 07:27:57 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int mini_pwd(void)
+void	delete_all_paths(char **path, int i)
 {
-	char *cwd[PATH_MAX];
-	if (getcwd(cwd, PATH_MAX))
-	{
-		write(1, cwd, ft_strlen(cwd));
-		write(1, "\n", 1);
-	}
+	while (path[i])
+		free(path[i++]);
+	free(path);
+}
+
+void	init_var(t_redir **ret, t_redir **tmp, t_redir **tmp2)
+{
+	(*ret) = NULL;
+	(*tmp) = NULL;
+	(*tmp2) = NULL;
+}
+
+t_token	*get_prev(t_shell *sh)
+{
+	t_token	*prev;
+
+	if (sh->rl->head->prev)
+		prev = sh->rl->head->prev;
 	else
-	{
-		write(1, "Error: could not get current working directory\n", 47);
-		return (ERROR);
-	}
-	return (SUCCESS);
+		prev = NULL;
+	return (prev);
 }
