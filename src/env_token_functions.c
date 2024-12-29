@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 16:13:49 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/12/07 04:03:20 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/29 17:21:14 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,13 @@ static char	*get_exit_code_var(int option)
 		dollar[0] = '$';
 		dollar[1] = '\0';
 	}
+	else if (option == 0)
+	{
+		dollar = (char *)malloc(sizeof(char) * 3);
+		dollar[0] = '$';
+		dollar[1] = '$';
+		dollar[2] = '\0';
+	}
 	return (dollar);
 }
 
@@ -44,6 +51,8 @@ char	*get_env_str(char *cmdl, int i)
 	count = 1;
 	if (cmdl[i] == '$' && cmdl[i + 1] == '?')
 		return (get_exit_code_var(2));
+	if (cmdl[i] == '$' && cmdl[i + 1] == '$')
+		return (get_exit_code_var(0));
 	while (cmdl[j] && !special_char(cmdl[j]) && !is_space(cmdl[j]))
 	{
 		count++;

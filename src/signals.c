@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 19:02:49 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/12/28 08:57:21 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/29 14:45:21 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,6 @@ void	signal_child_handler(int sign)
 
 void	handle_parent_signal(void)
 {
-	struct sigaction	signal_ign;
-
 	signal(SIGINT, signal_parent_handler);
 	signal(SIGQUIT, SIG_IGN);
 }

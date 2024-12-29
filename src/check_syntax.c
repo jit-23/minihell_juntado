@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 03:30:16 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/12/28 08:52:41 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/29 14:44:56 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ int	check_quote_pair(t_token *token)
 	squote = 0;
 	while (token)
 	{
-		if (token->type == D_QUOTE)
+		if (token->type == D_QUOTE && token->placing == DEFAULT)
 			dquote++;
-		else if (token->type == S_QUOTE)
+		else if (token->type == S_QUOTE && token->placing == DEFAULT)
 			squote++;
 		token = token->next;
 	}
@@ -72,12 +72,14 @@ int	check_quote_pair(t_token *token)
 	else if ((squote % 2) != 0)
 		return (ft_putstr_fd(2,
 				"syntax error: uneven number of squote quotes!\n"), 1);
+	return (0);
 }
 
 int	check_syntax(t_shell *sh)
 {
 	t_token	*tmp;
 
+	tmp = NULL;
 	tmp = sh->token_list->official_head;
 	if (check_pipe_sequence(tmp))
 		return (1);

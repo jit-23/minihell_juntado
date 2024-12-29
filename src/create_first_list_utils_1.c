@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 16:22:12 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/12/07 03:58:00 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/29 15:46:09 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,13 +76,19 @@ int	get_quote(t_shell *sh, t_placing *placing, char quote_type)
 
 	if (quote_type == '\'')
 	{
-		s_quote = strdup("\''");
-		add_to_list(sh->token_list, s_quote, S_QUOTE, *placing);
+		s_quote = strdup("\'");
+		if (*placing == IN_DQ)
+			add_to_list(sh->token_list, s_quote, WORD, *placing);
+		else
+			add_to_list(sh->token_list, s_quote, S_QUOTE, *placing);
 	}
 	else if (quote_type == '\"')
 	{
 		d_quote = strdup("\"");
-		add_to_list(sh->token_list, d_quote, D_QUOTE, *placing);
+		if (*placing == IN_SQ)
+			add_to_list(sh->token_list, d_quote, WORD, *placing);
+		else
+			add_to_list(sh->token_list, d_quote, D_QUOTE, *placing);
 	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 07:30:46 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/12/28 00:47:55 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/29 15:44:59 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@ int	is_space(int c)
 
 int	special_char(char c)
 {
-	if (c == '>' || c == '<' || c == '\n' || c == '\'' || c == '\"'
-		|| c == '$' || c == '|' || c == '=')
+	if (c == '>' || c == '<' || c == '\n' || c == '\'' \
+		|| c == '\"' || c == '$'
+		|| c == '|' || c == '=')
 		return (1);
 	return (0);
 }
@@ -46,12 +47,13 @@ int	count_word_size(char *cmdl, int i, t_shell *sh, t_placing placing)
 	}
 	else if (placing == IN_DQ)
 	{
-		while (cmdl[i] && cmdl[i] != '\"' && cmdl[i] != '$')
+		while (cmdl[i] && cmdl[i] != '\"' && \
+			cmdl[i] != '\'' && cmdl[i] != '$')
 			count_word_size_aux(&i, &count);
 	}
 	else if (placing == IN_SQ)
 	{
-		while (cmdl[i] && cmdl[i] != '\'')
+		while (cmdl[i] && cmdl[i] != '\'' && cmdl[i] != '\"')
 			count_word_size_aux(&i, &count);
 	}
 	return (count);
@@ -80,36 +82,3 @@ int	count_word_size_heredoc(char *cmdl, int i, t_shell *sh, t_placing placing)
 	}
 	return (count);
 }
-
-/* int	count_word_size_heredoc(char *cmdl, int i, \
-	t_shell *sh, t_placing placing)
-{
-	int	count;
-
-	count = 1;
-	if (placing == DEFAULT)
-		count_default(i, count, cmdl);
-	//{
-	//	while (cmdl[i] && !is_space(cmdl[i]) && !special_char(cmdl[i]))
-	//		count_word_size_aux(&i, &count);
-	//}
-	else if (placing == IN_DQ)
-	{
-		while (cmdl[i] && cmdl[i] != '\"')
-		{
-			if (cmdl[i] == '$' && cmdl[i] == '?')
-			{
-				i += 2;
-				count += ft_strlen(ft_itoa(g_sign));
-			}
-			else
-				count_word_size_aux(&i, &count);
-		}
-	}
-	else if (placing == IN_SQ)
-	{
-		while (cmdl[i] && cmdl[i] != '\'')
-			count_word_size_aux(&i, &count);
-	}
-	return (count);
-} */

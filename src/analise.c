@@ -7,7 +7,7 @@
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 20:01:30 by fde-jesu          #+#    #+#             */
 /*   Updated: 2024/07/30 04:37:04 by fde-jesu         ###   ########.fr       */
-/*											                                  */
+/*												                              */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
@@ -45,8 +45,8 @@ int	get_equal(t_shell *sh, t_placing place)
 	add_to_list(sh->token_list, equal, EQUAL, place);
 	return (1);
 }
-
-/* void	print_tree(t_cmd *root)
+/* 
+void	print_tree(t_cmd *root)
 {
 	static int j;
 	int i;
@@ -69,8 +69,7 @@ int	get_equal(t_shell *sh, t_placing place)
 	{
 		redir = (t_redir *)root;
 		print_tree((t_cmd *)redir->cmd);
-		printf("redir mode(%d)\nfile %s\n",\
-			redir->mode, redir->file);
+		printf("redir mode(%d)\nfile %s\n", redir->mode, redir->file);
 	}
 	else if (root->type == _PIPE)
 	{

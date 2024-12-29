@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 05:59:56 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/12/28 08:47:28 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/29 16:57:04 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -390,7 +390,7 @@ char					*check_access(char **all_paths, t_exec *ex);
 int						is_possible_path(char *token);
 char					*get_file_name(t_shell *sh);
 int						open_hdoc_file(char *file_name, t_shell *sh);
-void					heredoc_loop(char *a, char *eof, t_shell *sh, int fd);
+void					heredoc_loop(char *eof, t_shell *sh, int fd);
 char					*execute_heredoc(t_cmd *branch, char *eof, t_shell *sh);
 void					run_redir(t_shell *sh, t_redir *redir);
 int						ft_strcmp(char *str1, const char *str2);
@@ -415,12 +415,18 @@ void					run_pipe_aux(t_shell *sh, int fd[2], t_pipe *pp,
 void					start_tree_run(t_shell *sh);
 void					get_tkn_aux2(int i, t_exec *exec, char *token,
 							t_shell *sh);
-void					get_tkn_aux1(int i, t_exec *exec, t_cmd *branch,
+void					get_tkn_aux1(t_cmd *branch,
 							t_shell *sh);
 void					get_tkn_aux3(t_shell *sh);
 void					get_through_token(t_shell *sh);
 t_token					*get_prev(t_shell *sh);
 void					handle_parent_signal(void);
 int						check_quote_pair(t_token *token);
+void					add_first_oldpwd(t_shell *sh, char *name, char *value);
+int						check_quote_condition(t_shell *sh);
+void					get_tkn_aux(t_shell *sh, t_exec *exec, int i,
+							t_cmd *branch);
+t_env					*search_hdc_var(t_shell *sh, char *env_var);
+void					write_line(t_shell *sh, char *line, int fd);
 
 #endif

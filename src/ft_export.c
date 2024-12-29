@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 21:30:54 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/12/28 00:47:55 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/29 14:47:21 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	manage_var(t_shell *sh, char *name, char *value)
 
 void	ft_export_error_msg(t_shell *sh, char *msg)
 {
+	(void)sh;
 	ft_putstr_fd(2, "export: ");
 	ft_putstr_fd(2, msg);
 	ft_putstr_fd(2, " : not a valid identifier\n");

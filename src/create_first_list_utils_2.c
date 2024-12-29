@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 16:22:12 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/12/28 00:45:09 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/29 17:19:35 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	get_word(char *cmdl, int i, t_shell *sh, t_placing placing)
 		count++;
 		count = count_word_size_heredoc(cmdl, i + 1, sh, placing);
 	}
-	token = (char *)malloc(sizeof(char) * (count +1));
+	token = (char *)malloc(sizeof(char) * (count + 1));
 	ft_memset(token, 1, count + 1);
 	while (++j < count)
 		token[j] = cmdl[i + j];
@@ -47,19 +47,24 @@ int	get_word(char *cmdl, int i, t_shell *sh, t_placing placing)
 	return (count);
 }
 
-static int	get_env_var_aux(t_shell *sh, char *env_var, t_placing placing)
+static int	get_env_var_aux(t_shell *sh, char *env_var, t_placing placing,
+		char *expanded_var)
 {
-	char	*expanded_var;
-
 	expanded_var = NULL;
+	printf("ENV_VAR - .%s.\n", env_var);
 	if (env_var[0] == '$' && env_var[1] == '\0')
 	{
 		expanded_var = ft_strdup(env_var);
 		return (add_to_list(sh->token_list, expanded_var, WORD, DEFAULT), 1);
 	}
-	if (ft_strncmp(env_var, "$?", ft_strlen("$?")) == 0)
+	if (ft_strcmp(env_var, "$?") == 0)
 	{
 		expanded_var = ft_itoa(g_sign);
+		return (add_to_list(sh->token_list, expanded_var, WORD, DEFAULT), 2);
+	}
+	if (env_var[0] == '$' && env_var[1] == '$' && env_var[2] == '\0')
+	{
+		expanded_var = ft_itoa(getpid());
 		return (add_to_list(sh->token_list, expanded_var, WORD, DEFAULT), 2);
 	}
 	if (placing == DEFAULT || placing == IN_SQ)
@@ -96,7 +101,7 @@ int	get_env_var(char *cmdl, int i, t_shell *sh, t_placing placing)
 		add_to_list(sh->token_list, expanded_var, WORD, IN_SQ);
 		return (get_rid_off(env_var));
 	}
-	get_env_var_aux(sh, env_var, placing);
+	get_env_var_aux(sh, env_var, placing, NULL);
 	return (get_rid_off(env_var));
 }
 

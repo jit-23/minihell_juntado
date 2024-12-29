@@ -1,5 +1,5 @@
 NAME:= minishell
-CFLAGS:= -g #-Wall -Werror -Wextra
+CFLAGS:= -g -Wall -Werror -Wextra
 
 HEADER = includes/minishell.h
 GREEN:= \033[0;32m
@@ -46,7 +46,8 @@ SRC_FILES:=  main.c \
 					ft_export_utils.c\
 					main_utils.c \
 					init_AST_exec_struct_utils.c\
-					execute_cmd_error.c
+					execute_cmd_error.c\
+					heredoc_writing.c
 MAKE:= make -C
 LIBFT_DIR:= includes/libft
 LIBFT:= includes/libft/libft.a

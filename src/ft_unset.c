@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 21:51:14 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/12/28 00:47:55 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/29 17:00:14 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,11 @@
 
 void	ft_unset(t_shell *sh, t_exec *ex)
 {
-	if (ex->args[1])
-		delete_var(sh, ex->args[1]);
+	int	i;
+
+	i = 0;
+	while (ex->args[++i])
+		delete_var(sh, ex->args[i]);
 	g_sign = 0;
 }
 
@@ -24,8 +27,7 @@ t_env	*search_env_var(t_shell *sh, char *env_var)
 	t_env	*search;
 
 	search = sh->ev;
-	while (search && ft_strncmp(env_var, search->env_name, \
-	ft_strlen(search->env_name)))
+	while (search && ft_strcmp(env_var, search->env_name))
 		search = search->next;
 	if (!search)
 		return (NULL);

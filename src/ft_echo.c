@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 21:48:47 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/12/28 00:47:55 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/29 14:46:48 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	print_echo_flags(t_shell *sh, t_exec *ex, int i)
 {
 	int	start;
 
+	(void)sh;
 	start = i;
 	while (ex->args[i])
 	{

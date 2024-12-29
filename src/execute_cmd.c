@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 21:01:05 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/12/28 08:56:07 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/29 15:38:18 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	setcs(void)
 
 void	wait_child(int pid, int status, t_shell *shell)
 {
+	(void)shell;
 	if (waitpid(pid, &status, 0) != -1)
 	{
 		if (WIFEXITED(status))

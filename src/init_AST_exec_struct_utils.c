@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 07:24:54 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/12/28 07:26:58 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/12/29 15:16:48 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	get_tkn_aux2(int i, t_exec *exec, char *token, t_shell *sh)
 		exec->args[i] = ft_strdup(token);
 }
 
-void	get_tkn_aux1(int i, t_exec *exec, t_cmd *branch, t_shell *sh)
+void	get_tkn_aux1(t_cmd *branch, t_shell *sh)
 {
 	if (sh->rl->head->next)
 		sh->rl->head = sh->rl->head->next;
